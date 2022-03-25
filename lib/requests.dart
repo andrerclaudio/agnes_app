@@ -1,6 +1,7 @@
 /*
 
 Http related functions.
+All requests are pointed to api.agnes.ooo
 
  */
 
