@@ -10,27 +10,24 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class Data {
-  final String apiVersion;
-  final String message;
-  final String status;
+  final String dollarRate;
+  final String lastRefreshed;
 
   const Data({
-    required this.apiVersion,
-    required this.message,
-    required this.status,
+    required this.dollarRate,
+    required this.lastRefreshed,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
-      apiVersion: json['apiVersion'],
-      message: json['message'],
-      status: json['status'],
+      dollarRate: json['dollarRate'],
+      lastRefreshed: json['lastRefreshed'],
     );
   }
 }
 
 Future<Data> fetchData() async {
-  final response = await http.get(Uri.parse('http://api.agnes.ooo/'));
+  final response = await http.get(Uri.parse('http://api.agnes.ooo/currency'));
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
