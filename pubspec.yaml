@@ -55,9 +55,9 @@ dev_dependencies:
 flutter_icons:
   android: "agnes"
   ios: false
-  image_path: "./assets/playstore.png"
-  adaptive_icon_background: "./assets/playstore.png"
-  adaptive_icon_foreground: "./assets/playstore.png"
+  image_path: "./assets/agnes_icon.png"
+  adaptive_icon_background: "./assets/agnes_icon.png"
+  adaptive_icon_foreground: "./assets/agnes_icon.png"
 
 # The following section is specific to Flutter.
 flutter:
