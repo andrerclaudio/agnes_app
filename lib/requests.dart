@@ -11,17 +11,14 @@ import 'package:http/http.dart' as http;
 
 class Data {
   final String dollarRate;
-  final String lastRefreshed;
 
   const Data({
     required this.dollarRate,
-    required this.lastRefreshed,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) {
     return Data(
       dollarRate: json['dollarRate'],
-      lastRefreshed: json['lastRefreshed'],
     );
   }
 }

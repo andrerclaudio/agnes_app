@@ -98,8 +98,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text('R\$${snapshot.data!.dollarRate}'),
-                        Text(
-                            'Última atualização: ${snapshot.data!.lastRefreshed}'),
                       ],
                     );
                   } else if (snapshot.hasError) {
