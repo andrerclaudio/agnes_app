@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
   runApp(const MyApp());
 }
 
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey, scaffoldBackgroundColor: Colors.white,
       ),
       home: const MyHomePage(title: 'Agnes'),
     );
@@ -65,82 +65,88 @@ class _MyHomePageState extends State<MyHomePage> {
       //   // the App.build method, and use it to set our appbar title.
       //   title: const Center(child: Text('Agnes')),
       // ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-              child: const Text(
-                'Agnes',
-                style: TextStyle(
-                    color: Colors.blue,
+      body: SizedBox(
+        height: height,
+        width: width,
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: ListView(
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(20),
+                child: const Text(
+                  'Agnes',
+                  style: TextStyle(
+                    color: Color(0xff78af9f),
                     fontWeight: FontWeight.w500,
-                    fontSize: 30),
-              ),
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(10),
-              child: const Text(
-                'Sign in',
-                style: TextStyle(fontSize: 20),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(10),
-              child: TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'User Name',
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: TextField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Password',
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                //forgot password screen
-              },
-              child: const Text(
-                'Forgot Password',
-              ),
-            ),
-            Container(
-              height: 50,
-              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-              child: ElevatedButton(
-                child: const Text('Login'),
-                onPressed: () {},
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                const Text('Does not have account?'),
-                TextButton(
-                  child: const Text(
-                    'Sign in',
-                    style: TextStyle(fontSize: 20),
+                    fontSize: 40,
                   ),
-                  onPressed: () {
-                    //signup screen
-                  },
-                )
-              ],
-              mainAxisAlignment: MainAxisAlignment.center,
-            ),
-          ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'E-mail',
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: TextField(
+                  obscureText: true,
+                  controller: passwordController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Senha',
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  //forgot password screen
+                },
+                child: const Text(
+                  'Esqueceu a senha?',
+                ),
+              ),
+              Container(
+                height: 50,
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: ElevatedButton(
+                  child: const Text(
+                    'Entrar',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Color(0xff363639),
+                    ),
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  const Text('Não tem uma conta?'),
+                  TextButton(
+                    child: const Text(
+                      'Criar',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Color(0xff78af9f),
+                      ),
+                    ),
+                    onPressed: () {
+                      //signup screen
+                    },
+                  )
+                ],
+                mainAxisAlignment: MainAxisAlignment.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
