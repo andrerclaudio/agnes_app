@@ -1,4 +1,3 @@
-import 'package:agnes_app/requests.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Agnes',
+      title: 'Agnes Application UI',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.lightGreen,
+        primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Agnes'),
     );
@@ -51,72 +50,101 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Future<Data> futureData;
-
-  @override
-  void initState() {
-    super.initState();
-    futureData = fetchData();
-  }
-
-  void _getCurrencyInfo() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      futureData = fetchData();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    TextEditingController nameController = TextEditingController();
+    TextEditingController passwordController = TextEditingController();
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xff78af9f),
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: const Center(child: Text('Agnes')),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.blue,
+      //   // Here we take the value from the MyHomePage object that was created by
+      //   // the App.build method, and use it to set our appbar title.
+      //   title: const Center(child: Text('Agnes')),
+      // ),
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: ListView(
+          children: <Widget>[
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              child: const Text(
+                'Agnes',
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 30),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              child: const Text(
+                'Sign in',
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                controller: nameController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'User Name',
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+              child: TextField(
+                obscureText: true,
+                controller: passwordController,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Password',
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                //forgot password screen
+              },
+              child: const Text(
+                'Forgot Password',
+              ),
+            ),
+            Container(
+                height: 50,
+                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                child: ElevatedButton(
+                  child: const Text('Login'),
+                  onPressed: () {
+                    print(nameController.text);
+                    print(passwordController.text);
+                  },
+                )),
+            Row(
+              children: <Widget>[
+                const Text('Does not have account?'),
+                TextButton(
+                  child: const Text(
+                    'Sign in',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  onPressed: () {
+                    //signup screen
+                  },
+                )
+              ],
+              mainAxisAlignment: MainAxisAlignment.center,
+            ),
+          ],
+        ),
       ),
-      body: Column(
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              FutureBuilder<Data>(
-                future: futureData,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text('R\$${snapshot.data!.dollarRate}'),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-                  // By default, show a loading spinner.
-                  return const CircularProgressIndicator();
-                },
-              )
-            ],
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _getCurrencyInfo,
-        tooltip: 'Get dollar rate!',
-        child: const Icon(Icons.download),
-        backgroundColor: const Color(0xff78af9f),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
