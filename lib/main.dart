@@ -3,11 +3,11 @@ import 'package:agnes_app/routes/login_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const AgnesApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class AgnesApp extends StatelessWidget {
+  const AgnesApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
