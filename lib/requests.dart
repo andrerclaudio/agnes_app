@@ -7,7 +7,7 @@ All requests are pointed to api.agnes.ooo
 
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:agnes_app/constant.dart';
 import 'package:http/http.dart' as http;
 
 class Data {
@@ -27,7 +27,7 @@ class Data {
 Future<Data> fetchData() async {
   try {
     final response = await http.get(
-      Uri.parse('http://192.168.0.163:8000/currency'),
+      Uri.parse(Constant.apiBaseURL),
       // headers: {
       //   "Authorization":
       //       ''

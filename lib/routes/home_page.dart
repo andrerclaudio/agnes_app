@@ -1,5 +1,6 @@
 import 'package:agnes_app/requests.dart';
 import 'package:flutter/material.dart';
+import 'package:agnes_app/constant.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Second Screen'),
+        title: const Text(Constant.homeScreenTitleText),
       ),
       body: Center(
         child: Column(

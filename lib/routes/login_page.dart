@@ -1,3 +1,4 @@
+import 'package:agnes_app/constant.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -34,12 +35,8 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.center,
                 padding: const EdgeInsets.all(20),
                 child: const Text(
-                  'Agnes',
-                  style: TextStyle(
-                    color: Color(0xff78af9f),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 40,
-                  ),
+                  Constant.loginTitleText,
+                  style: Constant.loginTitleTextStyle,
                 ),
               ),
               Container(
@@ -48,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: nameController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'E-mail',
+                    labelText: Constant.labelTextEmail,
                   ),
                 ),
               ),
@@ -59,7 +56,7 @@ class _LoginPageState extends State<LoginPage> {
                   controller: passwordController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Senha',
+                    labelText: Constant.labelTextPassword,
                   ),
                 ),
               ),
@@ -68,7 +65,7 @@ class _LoginPageState extends State<LoginPage> {
                   //forgot password screen
                 },
                 child: const Text(
-                  'Esqueceu a senha?',
+                  Constant.forgotPasswordText
                 ),
               ),
               Container(
@@ -76,11 +73,8 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: ElevatedButton(
                   child: const Text(
-                    'Entrar',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Color(0xff363639),
-                    ),
+                    Constant.signInText,
+                    style: Constant.signInTextStyle,
                   ),
                   onPressed: () {
                     Navigator.of(context)
@@ -90,14 +84,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
               Row(
                 children: <Widget>[
-                  const Text('Não tem uma conta?'),
+                  const Text(Constant.doNotHaveAccountText),
                   TextButton(
                     child: const Text(
-                      'Criar',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Color(0xff78af9f),
-                      ),
+                      Constant.signUpText,
+                      style: Constant.signUpTextStyle,
                     ),
                     onPressed: () {
                       //signup screen
