@@ -47,5 +47,7 @@ Future<Data> fetchData() async {
     return Data.fromJson({"dollarRate": "0.00"});
   } on FormatException {
     return Data.fromJson({"dollarRate": "0.00"});
+  } on http.ClientException {
+    return Data.fromJson({"dollarRate": "0.00"});
   }
 }
