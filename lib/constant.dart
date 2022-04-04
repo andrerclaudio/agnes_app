@@ -19,7 +19,7 @@ class Constant {
   static const signInText = 'Entrar';
   static const TextStyle signInTextStyle = TextStyle(
     fontSize: 15,
-    color: Color(textColorGreen),
+    color: Color(textColorBrown),
   );
 
   static const signUpText = 'Criar';
