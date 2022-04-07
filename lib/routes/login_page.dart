@@ -64,9 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   //forgot password screen
                 },
-                child: const Text(
-                  Constant.forgotPasswordText
-                ),
+                child: const Text(Constant.forgotPasswordText),
               ),
               Container(
                 height: 50,
