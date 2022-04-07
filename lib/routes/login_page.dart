@@ -24,6 +24,12 @@ class _LoginPageState extends State<LoginPage> {
     TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
       body: SizedBox(
         height: height,
         width: width,

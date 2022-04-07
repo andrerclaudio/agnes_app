@@ -1,4 +1,8 @@
 import 'package:agnes_app/requests.dart';
+import 'package:agnes_app/screens/community_screen.dart';
+import 'package:agnes_app/screens/numbers_screen.dart';
+import 'package:agnes_app/screens/reading_screen.dart';
+import 'package:agnes_app/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:agnes_app/constant.dart';
 
@@ -10,9 +14,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0; //TODO Change the value for a defined constant
+  int _selectedIndex = Constant.initialIndex;
   late Future<Data> futureData;
-  final List<Widget> _widgetOptions = <Widget>[];
+  final List<Widget> _widgetOptions = <Widget>[
+    const ReadingScreen(),
+    const NumbersScreen(),
+    const CommunityScreen(),
+    const SettingsScreen(),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -22,11 +31,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      body: const Text('Hello'), //_widgetOptions.elementAt(_selectedIndex),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const <BottomNavigationBarItem>[
@@ -48,7 +60,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: const Color(Constant.objectsColorAmber),
         onTap: _onItemTapped,
       ),
     );

@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
 class Constant {
+  // Initial index value
+  static int initialIndex = 0;
+
   // Colors
-  static const textColorGreen = 0xff78af9f;
-  static const textColorBrown = 0xff363639;
+  static const textColorAmber = 0xffff8f00;
+  static const textColorBrown = 0xff4e342e;
+  static const objectsColorAmber = 0xffff8f00;
 
   // Api related
   static const apiBaseURL = 'http://192.168.0.163:8000/';
@@ -13,7 +17,7 @@ class Constant {
   static const TextStyle loginTitleTextStyle = TextStyle(
     fontSize: 40,
     fontWeight: FontWeight.w500,
-    color: Color(textColorGreen),
+    color: Color(textColorBrown),
   );
 
   static const signInText = 'Entrar';
@@ -25,7 +29,7 @@ class Constant {
   static const signUpText = 'Criar';
   static const TextStyle signUpTextStyle = TextStyle(
     fontSize: 20,
-    color: Color(textColorGreen),
+    color: Color(textColorBrown),
   );
 
   static const labelTextEmail = 'E-mail';
