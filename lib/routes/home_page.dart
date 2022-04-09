@@ -1,4 +1,3 @@
-import 'package:agnes_app/requests.dart';
 import 'package:agnes_app/screens/community_screen.dart';
 import 'package:agnes_app/screens/numbers_screen.dart';
 import 'package:agnes_app/screens/reading_screen.dart';
@@ -15,7 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = Constant.initialIndex;
-  late Future<Data> futureData;
+
   final List<Widget> _widgetOptions = <Widget>[
     const ReadingScreen(),
     const NumbersScreen(),
@@ -41,6 +40,8 @@ class _HomePageState extends State<HomePage> {
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.black,
+        unselectedItemColor: Colors.white,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.insights),

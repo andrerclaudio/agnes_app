@@ -6,48 +6,48 @@ All requests are pointed to api.agnes.ooo
  */
 
 import 'dart:convert';
-import 'dart:io';
 import 'package:agnes_app/constant.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-class Data {
-  final String dollarRate;
+class BookInfo {
+  final String bookName;
+  final String bookAuthor;
+  final String bookPublisher;
+  final String bookIsbn;
+  final String bookQtyPages;
+  final String bookCoverLink;
 
-  const Data({
-    required this.dollarRate,
+  const BookInfo({
+    required this.bookName,
+    required this.bookAuthor,
+    required this.bookPublisher,
+    required this.bookIsbn,
+    required this.bookQtyPages,
+    required this.bookCoverLink,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) {
-    return Data(
-      dollarRate: json['dollarRate'],
+  factory BookInfo.fromJson(Map<String, dynamic> json) {
+    return BookInfo(
+      bookName: json['bookName'] as String,
+      bookAuthor: json['bookAuthor'] as String,
+      bookPublisher: json['bookPublisher'] as String,
+      bookIsbn: json['bookIsbn'] as String,
+      bookQtyPages: json['bookQtyPages'] as String,
+      bookCoverLink: json['bookCoverLink'] as String,
     );
   }
 }
 
-Future<Data> fetchData() async {
-  try {
-    final response = await http.get(
-      Uri.parse(Constant.apiBaseURL),
-      // headers: {
-      //   "Authorization":
-      //       ''
-      // },
-    );
+List<BookInfo> parseBookInfo(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return Data.fromJson(jsonDecode(response.body));
-    } else {
-      return Data.fromJson({"dollarRate": "0.00"});
-    }
-  } on SocketException {
-    return Data.fromJson({"dollarRate": "0.00"});
-  } on HttpException {
-    return Data.fromJson({"dollarRate": "0.00"});
-  } on FormatException {
-    return Data.fromJson({"dollarRate": "0.00"});
-  } on http.ClientException {
-    return Data.fromJson({"dollarRate": "0.00"});
-  }
+  return parsed.map<BookInfo>((json) => BookInfo.fromJson(json)).toList();
+}
+
+Future<List<BookInfo>> fetchBookInfo(http.Client client) async {
+  // TODO Parse Exceptions
+  final response = await client.get(Uri.parse(Constant.apiBaseURL));
+
+  return compute(parseBookInfo, response.body);
 }

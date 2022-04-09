@@ -10,7 +10,7 @@ class Constant {
   static const objectsColorAmber = 0xffff8f00;
 
   // Api related
-  static const apiBaseURL = 'http://192.168.0.163:8000/';
+  static const apiBaseURL = 'http://www.agnes.ooo/';
 
   // Login screen
   static const loginTitleText = 'Agnes';
