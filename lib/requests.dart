@@ -46,7 +46,6 @@ List<BookInfo> parseBookInfo(String responseBody) {
 }
 
 Future<List<BookInfo>> fetchBookInfo(http.Client client) async {
-  // TODO Parse Exceptions
   final response = await client.get(Uri.parse(Constant.apiBaseURL));
 
   return compute(parseBookInfo, response.body);

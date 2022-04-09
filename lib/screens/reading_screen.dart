@@ -14,11 +14,37 @@ class ReadingScreenState extends State<ReadingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     return FutureBuilder<List<BookInfo>>(
       future: fetchBookInfo(http.Client()),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return const Center(child: Text('An error has occurred!'));
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: height * 0.3,
+                  width: width * 0.5,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('./assets/graphics/sorry.png'),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+                const Text(
+                  'Ooops! Algo deu errado. Tente novamente.',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  softWrap: false,
+                  overflow: TextOverflow.visible,
+                ),
+              ],
+            ),
+          );
         } else if (snapshot.hasData) {
           return BookReadingList(info: snapshot.data!);
         } else {
