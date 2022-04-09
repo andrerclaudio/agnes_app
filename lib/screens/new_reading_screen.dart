@@ -17,23 +17,23 @@ class _AddNewReadingState extends State<AddNewReading> {
           height: MediaQuery.of(context).padding.top,
         ),
       ),
-      body: const _NewReading(),
+      body: const _AskIsbnCode(),
     );
   }
 }
 
-class _NewReading extends StatefulWidget {
-  const _NewReading({Key? key}) : super(key: key);
+class _AskIsbnCode extends StatefulWidget {
+  const _AskIsbnCode({Key? key}) : super(key: key);
 
   @override
-  _NewReadingState createState() {
-    return _NewReadingState();
+  _AskIsbnCodeState createState() {
+    return _AskIsbnCodeState();
   }
 }
 
 // Create a corresponding State class.
 // This class holds data related to the form.
-class _NewReadingState extends State<_NewReading> {
+class _AskIsbnCodeState extends State<_AskIsbnCode> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
@@ -54,41 +54,45 @@ class _NewReadingState extends State<_NewReading> {
         padding: const EdgeInsets.all(5),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FocusTraversalGroup(
-                descendantsAreFocusable: true,
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.library_add),
-                    hintText: 'What do people call you?',
-                    labelText: 'Name *',
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                FocusTraversalGroup(
+                  descendantsAreFocusable: true,
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: Icon(Icons.format_size_sharp),
+                      helperText:
+                          'Voce encontra o codigo ISBN proximo ao codigo de barras, no verso do livro. \nPor exemplo: 978-8576573937',
+                      helperMaxLines: 4,
+                      labelText: 'Digite o ISBN',
+                    ),
+                    validator: (String? value) {
+                      // TODO Think about it.
+                      return (value == null || value.isEmpty)
+                          ? 'Por favor'
+                          : null;
+                    },
                   ),
-                  validator: (String? value) {
-                    return (value == null || value.isEmpty)
-                        ? 'Please enter some text'
-                        : null;
-                  },
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Validate returns true if the form is valid, or false otherwise.
-                    if (_formKey.currentState!.validate()) {
-                      // If the form is valid, display a snackbar. In the real world,
-                      // you'd often call a server or save the information in a database.
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Processing Data')),
-                      );
-                    }
-                  },
-                  child: const Text('Submit'),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Validate returns true if the form is valid, or false otherwise.
+                        if (_formKey.currentState!.validate()) {
+                          // TODO fetch ISBN code
+                        }
+                      },
+                      child: const Text('Procurar ...'),
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

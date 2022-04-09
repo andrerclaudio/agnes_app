@@ -76,10 +76,13 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: const Color(Constant.objectsColorAmber),
         onTap: _onItemTapped,
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         onPressed: _addNewReading,
-        tooltip: '... nova leitura',
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text('Nova leitura'),
       ),
     );
   }
