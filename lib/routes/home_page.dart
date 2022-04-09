@@ -5,6 +5,8 @@ import 'package:agnes_app/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:agnes_app/constant.dart';
 
+import '../screens/new_reading_screen.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -21,6 +23,16 @@ class _HomePageState extends State<HomePage> {
     const CommunityScreen(),
     const SettingsScreen(),
   ];
+
+  void _addNewReading() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) {
+          return const AddNewReading();
+        },
+      ),
+    );
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -63,6 +75,11 @@ class _HomePageState extends State<HomePage> {
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(Constant.objectsColorAmber),
         onTap: _onItemTapped,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addNewReading,
+        tooltip: '... nova leitura',
+        child: const Icon(Icons.add),
       ),
     );
   }
