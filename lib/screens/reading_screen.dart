@@ -67,135 +67,154 @@ class BookReadingList extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return SizedBox(
-      height: height,
-      width: width,
-      child: ListView.builder(
-        padding: const EdgeInsets.all(2),
-        itemCount: info.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: height * 0.25,
-                  width: width * 0.35,
-                  decoration: BoxDecoration(
-                    color: Colors.grey,
-                    image: DecorationImage(
-                      image: NetworkImage(info[index].bookCoverLink),
-                      fit: BoxFit.fill,
-                    ),
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 2,
-                    ),
-                  ),
-                ),
-                Container(
-                  height: height * 0.25,
-                  width: width * 0.01,
-                  color: Colors.white,
-                ),
-                Expanded(
-                  child: Container(
+    var activeReadingIndex = <int>[];
+    var inactiveReadingIndex = <int>[];
+
+    // Let's find the active readings and the ones that are paused
+    for (int i = 0; i < info.length; i++) {
+      if (info[i].readingInProgress) {
+        activeReadingIndex.add(i);
+      } else {
+        inactiveReadingIndex.add(i);
+      }
+    }
+
+    if (activeReadingIndex.isNotEmpty) {
+      return SizedBox(
+        height: height,
+        width: width,
+        child: ListView.builder(
+          padding: const EdgeInsets.all(2),
+          itemCount: info.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
+              child: Row(
+                children: [
+                  Container(
                     height: height * 0.25,
-                    alignment: Alignment.topLeft,
+                    width: width * 0.35,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.grey,
+                      image: DecorationImage(
+                        image: NetworkImage(info[index].bookCoverLink),
+                        fit: BoxFit.fill,
+                      ),
                       border: Border.all(
                         color: Colors.grey,
                         width: 2,
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              'Nome: ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Flexible(
-                              child: Text(
-                                info[index].bookName,
-                                softWrap: true,
-                                overflow: TextOverflow.visible,
-                              ),
-                            ),
-                          ],
+                  ),
+                  Container(
+                    height: height * 0.25,
+                    width: width * 0.01,
+                    color: Colors.white,
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: height * 0.25,
+                      alignment: Alignment.topLeft,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
                         ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Autor: ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Flexible(
-                              child: Text(
-                                info[index].bookAuthor,
-                                softWrap: true,
-                                overflow: TextOverflow.visible,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              const Text(
+                                'Nome: ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Editora: ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Flexible(
-                              child: Text(
-                                info[index].bookPublisher,
-                                softWrap: true,
-                                overflow: TextOverflow.visible,
+                              Flexible(
+                                child: Text(
+                                  info[index].bookTitle,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Isbn: ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Flexible(
-                              child: Text(
-                                info[index].bookIsbn,
-                                softWrap: true,
-                                overflow: TextOverflow.visible,
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'Autor: ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            const Text(
-                              'Qtd. de pág.: ',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Flexible(
-                              child: Text(
-                                info[index].bookQtyPages,
-                                softWrap: true,
-                                overflow: TextOverflow.visible,
+                              Flexible(
+                                child: Text(
+                                  info[index].bookAuthor,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'Editora: ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  info[index].bookPublisher,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'Isbn: ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  info[index].bookIsbn,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              const Text(
+                                'Qtd. de pág.: ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Flexible(
+                                child: Text(
+                                  info[index].bookQtyPages,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      return SizedBox(
+        height: height,
+        width: width,
+        child: const Text('Text'),
+      );
+    }
   }
 }

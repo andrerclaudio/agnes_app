@@ -11,7 +11,10 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class BookInfo {
-  final String bookName;
+  final bool readingInProgress;
+  final bool readingCanceled;
+  final bool readingFinished;
+  final String bookTitle;
   final String bookAuthor;
   final String bookPublisher;
   final String bookIsbn;
@@ -19,7 +22,10 @@ class BookInfo {
   final String bookCoverLink;
 
   const BookInfo({
-    required this.bookName,
+    required this.readingInProgress,
+    required this.readingCanceled,
+    required this.readingFinished,
+    required this.bookTitle,
     required this.bookAuthor,
     required this.bookPublisher,
     required this.bookIsbn,
@@ -29,7 +35,10 @@ class BookInfo {
 
   factory BookInfo.fromJson(Map<String, dynamic> json) {
     return BookInfo(
-      bookName: json['bookName'] as String,
+      readingInProgress:json['readingInProgress'] as bool,
+      readingCanceled:json['readingCanceled'] as bool,
+      readingFinished:json['readingFinished'] as bool,
+      bookTitle: json['bookTitle'] as String,
       bookAuthor: json['bookAuthor'] as String,
       bookPublisher: json['bookPublisher'] as String,
       bookIsbn: json['bookIsbn'] as String,
@@ -46,7 +55,7 @@ List<BookInfo> parseBookInfo(String responseBody) {
 }
 
 Future<List<BookInfo>> fetchBookInfo(http.Client client) async {
-  final response = await client.get(Uri.parse(Constant.apiBaseURL));
+  final response = await client.get(Uri.parse(Constant.apiBookInfoURL));
 
   return compute(parseBookInfo, response.body);
 }
