@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 
 class BookInfo {
   final bool readingInProgress;
+  final bool readingPaused;
   final bool readingCanceled;
   final bool readingFinished;
   final String bookTitle;
@@ -23,6 +24,7 @@ class BookInfo {
 
   const BookInfo({
     required this.readingInProgress,
+    required this.readingPaused,
     required this.readingCanceled,
     required this.readingFinished,
     required this.bookTitle,
@@ -36,6 +38,7 @@ class BookInfo {
   factory BookInfo.fromJson(Map<String, dynamic> json) {
     return BookInfo(
       readingInProgress:json['readingInProgress'] as bool,
+      readingPaused: json['readingPaused'] as bool,
       readingCanceled:json['readingCanceled'] as bool,
       readingFinished:json['readingFinished'] as bool,
       bookTitle: json['bookTitle'] as String,

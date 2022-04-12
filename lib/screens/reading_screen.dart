@@ -68,14 +68,14 @@ class BookReadingList extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
 
     var activeReadingIndex = <int>[];
-    var inactiveReadingIndex = <int>[];
+    var pausedReadingIndex = <int>[];
 
     // Let's find the active readings and the ones that are paused
     for (int i = 0; i < info.length; i++) {
       if (info[i].readingInProgress) {
         activeReadingIndex.add(i);
-      } else {
-        inactiveReadingIndex.add(i);
+      } else if (info[i].readingPaused) {
+        pausedReadingIndex.add(i);
       }
     }
 
@@ -85,8 +85,9 @@ class BookReadingList extends StatelessWidget {
         width: width,
         child: ListView.builder(
           padding: const EdgeInsets.all(2),
-          itemCount: info.length,
+          itemCount: activeReadingIndex.length,
           itemBuilder: (context, index) {
+            int activeIndex = activeReadingIndex[index];
             return Padding(
               padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
               child: Row(
@@ -97,7 +98,7 @@ class BookReadingList extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       image: DecorationImage(
-                        image: NetworkImage(info[index].bookCoverLink),
+                        image: NetworkImage(info[activeIndex].bookCoverLink),
                         fit: BoxFit.fill,
                       ),
                       border: Border.all(
@@ -132,7 +133,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].bookTitle,
+                                  info[activeIndex].bookTitle,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -147,7 +148,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].bookAuthor,
+                                  info[activeIndex].bookAuthor,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -162,7 +163,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].bookPublisher,
+                                  info[activeIndex].bookPublisher,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -177,7 +178,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].bookIsbn,
+                                  info[activeIndex].bookIsbn,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -192,7 +193,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].bookQtyPages,
+                                  info[activeIndex].bookQtyPages,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
