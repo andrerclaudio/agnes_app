@@ -41,18 +41,20 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
-  void _fetchBookInfo() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (BuildContext context) {
-          return const FetchBookInfo();
-        },
-      ),
-    );
-  }
+  // void _fetchBookInfo() {
+  //   Navigator.of(context).push(
+  //     MaterialPageRoute(
+  //       builder: (BuildContext context) {
+  //         return const FetchBookInfo();
+  //       },
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController isbnCode = TextEditingController();
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -72,6 +74,8 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
                 FocusTraversalGroup(
                   descendantsAreFocusable: true,
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: isbnCode,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.format_size_sharp),
                       helperText:
@@ -82,7 +86,7 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
                     validator: (String? value) {
                       // TODO Think about it.
                       return (value == null || value.isEmpty)
-                          ? 'Por favor, digite o código ISBN.'
+                          ? 'Por favor, digite o código ISBN.\n\n'
                           : null;
                     },
                   ),
@@ -91,13 +95,18 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                     child: ElevatedButton(
-                      onPressed: _fetchBookInfo,
-                      // onPressed: () {
-                      //   // Validate returns true if the form is valid, or false otherwise.
-                      //   if (_formKey.currentState!.validate()) {
-                      //     _fetchBookInfo;
-                      //   }
-                      // },
+                      onPressed: () {
+                        // Validate returns true if the form is valid, or false otherwise.
+                        if (_formKey.currentState!.validate()) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) => FetchBookInfo(
+                                isbn: isbnCode.text,
+                              ),
+                            ),
+                          );
+                        }
+                      },
                       child: const Text('Procurar ...'),
                     ),
                   ),
@@ -112,7 +121,9 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
 }
 
 class FetchBookInfo extends StatefulWidget {
-  const FetchBookInfo({Key? key}) : super(key: key);
+  final String isbn;
+
+  const FetchBookInfo({Key? key, required this.isbn}) : super(key: key);
 
   @override
   FetchBookInfoState createState() => FetchBookInfoState();
@@ -126,42 +137,50 @@ class FetchBookInfoState extends State<FetchBookInfo> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return FutureBuilder<List<BookInfoByISBN>>(
-      future: fetchBookInfoByIsbn(http.Client()),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  height: height * 0.3,
-                  width: width * 0.5,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('./assets/graphics/sorry.png'),
-                      fit: BoxFit.fill,
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: FutureBuilder<List<BookInfoByISBN>>(
+        future: fetchBookInfoByIsbn(http.Client(), widget.isbn),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: height * 0.3,
+                    width: width * 0.5,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('./assets/graphics/sorry.png'),
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
-                ),
-                const Text(
-                  'Ooops! Algo deu errado. Tente novamente.',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  softWrap: false,
-                  overflow: TextOverflow.visible,
-                ),
-              ],
-            ),
-          );
-        } else if (snapshot.hasData) {
-          return BookInfoByIsbn(info: snapshot.data!);
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
+                  const Text(
+                    'Ooops! Algo deu errado. Tente novamente.',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    softWrap: false,
+                    overflow: TextOverflow.visible,
+                  ),
+                ],
+              ),
+            );
+          } else if (snapshot.hasData) {
+            return BookInfoByIsbn(info: snapshot.data!);
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
     );
   }
 }

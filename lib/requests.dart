@@ -111,8 +111,10 @@ List<BookInfoByISBN> parseBookInfoByIsbn(String responseBody) {
       .toList();
 }
 
-Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(http.Client client) async {
-  final response = await client.get(Uri.parse(Constant.apiFetchBookInfoURL));
+Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(
+    http.Client client, isbn) async {
+  final response = await client.get(Uri.parse(
+      'http://192.168.0.163:8000/query?function=fetchBookInfo&isbn=$isbn'));
 
   return compute(parseBookInfoByIsbn, response.body);
 }
