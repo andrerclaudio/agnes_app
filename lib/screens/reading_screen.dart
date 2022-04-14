@@ -79,15 +79,14 @@ class BookReadingList extends StatelessWidget {
       }
     }
 
-    if (activeReadingIndex.isNotEmpty) {
+    if ((activeReadingIndex.isNotEmpty) || (pausedReadingIndex.isNotEmpty)) {
       return SizedBox(
         height: height,
         width: width,
         child: ListView.builder(
           padding: const EdgeInsets.all(2),
-          itemCount: activeReadingIndex.length,
+          itemCount: info.length,
           itemBuilder: (context, index) {
-            int activeIndex = activeReadingIndex[index];
             return Padding(
               padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
               child: Row(
@@ -98,7 +97,7 @@ class BookReadingList extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       image: DecorationImage(
-                        image: NetworkImage(info[activeIndex].bookCoverLink),
+                        image: NetworkImage(info[index].coverLink),
                         fit: BoxFit.fill,
                       ),
                       border: Border.all(
@@ -133,7 +132,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[activeIndex].bookTitle,
+                                  info[index].title,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -148,7 +147,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[activeIndex].bookAuthor,
+                                  info[index].author,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -163,7 +162,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[activeIndex].bookPublisher,
+                                  info[index].publisher,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -178,7 +177,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[activeIndex].bookIsbn,
+                                  info[index].isbn,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -193,7 +192,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[activeIndex].bookQtyPages,
+                                  info[index].pagesQty,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),

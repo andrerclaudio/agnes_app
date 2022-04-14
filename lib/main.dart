@@ -1,8 +1,11 @@
 import 'package:agnes_app/routes/home_page.dart';
 import 'package:agnes_app/routes/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(statusBarColor: Colors.black));
   runApp(const AgnesApp());
 }
 
