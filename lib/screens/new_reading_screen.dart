@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import '../requests.dart';
 
 class AddNewReading extends StatefulWidget {
@@ -121,9 +122,8 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
 }
 
 class FetchBookInfo extends StatefulWidget {
-  final String isbn;
-
   const FetchBookInfo({Key? key, required this.isbn}) : super(key: key);
+  final String isbn;
 
   @override
   FetchBookInfoState createState() => FetchBookInfoState();
@@ -131,6 +131,8 @@ class FetchBookInfo extends StatefulWidget {
 
 class FetchBookInfoState extends State<FetchBookInfo> {
   late Future<BookInfoByISBN> futureData;
+  late final Future<List<BookInfoByISBN>> _fetchBookByIsbn =
+      fetchBookInfoByIsbn(http.Client(), widget.isbn);
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +147,7 @@ class FetchBookInfoState extends State<FetchBookInfo> {
         ),
       ),
       body: FutureBuilder<List<BookInfoByISBN>>(
-        future: fetchBookInfoByIsbn(http.Client(), widget.isbn),
+        future: _fetchBookByIsbn,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
