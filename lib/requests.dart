@@ -6,6 +6,7 @@ All requests are pointed to api.agnes.ooo
  */
 
 import 'dart:convert';
+
 import 'package:agnes_app/constant.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -112,9 +113,44 @@ List<BookInfoByISBN> parseBookInfoByIsbn(String responseBody) {
 }
 
 Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(
-    http.Client client, isbn) async {
-  final response = await client.get(Uri.parse(
-      'http://192.168.0.163:8000/query?function=fetchBookInfo&isbn=$isbn'));
+    http.Client client, String isbn) async {
+  final response = await client.get(
+    Uri.parse(
+        'http://192.168.0.163:8000/query?function=fetchBookInfo&isbn=$isbn'),
+  );
 
   return compute(parseBookInfoByIsbn, response.body);
+}
+
+// Add Book by ISBN code class
+class BookAdded {
+  final String title;
+  final String isbn;
+
+  const BookAdded({
+    required this.title,
+    required this.isbn,
+  });
+
+  factory BookAdded.fromJson(Map<String, dynamic> json) {
+    return BookAdded(
+      title: json['title'] as String,
+      isbn: json['isbn'] as String,
+    );
+  }
+}
+
+List<BookAdded> newBookInfo(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<BookAdded>((json) => BookAdded.fromJson(json)).toList();
+}
+
+Future<List<BookAdded>> addNewBookToShelf(
+    http.Client client, String isbn) async {
+  final response = await client.post(
+    Uri.parse('http://192.168.0.163:8000/post?isbnCode=$isbn'),
+  );
+
+  return compute(newBookInfo, response.body);
 }

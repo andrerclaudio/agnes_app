@@ -42,16 +42,6 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
-  // void _fetchBookInfo() {
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute(
-  //       builder: (BuildContext context) {
-  //         return const FetchBookInfo();
-  //       },
-  //     ),
-  //   );
-  // }
-
   @override
   Widget build(BuildContext context) {
     TextEditingController isbnCode = TextEditingController();
@@ -201,13 +191,11 @@ class BookInfoByIsbn extends StatelessWidget {
       return SizedBox(
         height: height,
         width: width,
-        child: ListView.builder(
-          padding: const EdgeInsets.all(2),
-          itemCount: info.length,
-          itemBuilder: (context, index) {
-            return Padding(
-              padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
-              child: Row(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+          child: Column(
+            children: [
+              Row(
                 children: [
                   Container(
                     height: height * 0.25,
@@ -215,7 +203,7 @@ class BookInfoByIsbn extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       image: DecorationImage(
-                        image: NetworkImage(info[index].coverLink),
+                        image: NetworkImage(info[0].coverLink),
                         fit: BoxFit.fill,
                       ),
                       border: Border.all(
@@ -250,7 +238,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].title,
+                                  info[0].title,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -265,7 +253,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].author,
+                                  info[0].author,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -280,7 +268,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].publisher,
+                                  info[0].publisher,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -295,7 +283,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].isbn,
+                                  info[0].isbn,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -310,7 +298,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].pagesQty,
+                                  info[0].pagesQty,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -323,10 +311,129 @@ class BookInfoByIsbn extends StatelessWidget {
                   ),
                 ],
               ),
-            );
-          },
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(height * 0.2, 50),
+                      maximumSize: Size(height * 0.2, 50),
+                    ),
+                    child: const Text('Iniciar leitura'),
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => AddingNewBookToShelf(
+                          isbn: info[0].isbn,
+                        ),
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(height * 0.2, 50),
+                      maximumSize: Size(height * 0.2, 50),
+                    ),
+                    child: const Text('Voltar'),
+                    onPressed: () => Navigator.pop(context, false),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       );
     }
+  }
+}
+
+class AddingNewBookToShelf extends StatefulWidget {
+  const AddingNewBookToShelf({Key? key, required this.isbn}) : super(key: key);
+  final String isbn;
+
+  @override
+  State<AddingNewBookToShelf> createState() => _AddingNewBookToShelfState();
+}
+
+class _AddingNewBookToShelfState extends State<AddingNewBookToShelf> {
+  late Future<BookAdded> futureData;
+  late final Future<List<BookAdded>> _addNewBookToShelf =
+      addNewBookToShelf(http.Client(), widget.isbn);
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: FutureBuilder<List<BookAdded>>(
+        future: _addNewBookToShelf,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    height: height * 0.3,
+                    width: width * 0.5,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('./assets/graphics/sorry.png'),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  const Text(
+                    'Oops! Algo deu errado. Tente novamente.',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    softWrap: false,
+                    overflow: TextOverflow.visible,
+                  ),
+                ],
+              ),
+            );
+          } else if (snapshot.hasData) {
+            return AlertDialog(
+              backgroundColor: Colors.blueGrey,
+              title: const Text('Você adicionou o livro a sua estante!'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: const <Widget>[
+                    Text('A leitura foi iniciada.'),
+                    Text('Você verá o livro na aba "Lendo".'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text(
+                    'Voltar',
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushNamedAndRemoveUntil('/home', (route) => false);
+                  },
+                ),
+              ],
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+    );
   }
 }
