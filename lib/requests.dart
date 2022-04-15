@@ -13,6 +13,7 @@ import 'package:http/http.dart' as http;
 
 // Reading screen class
 class BookInfo {
+  final bool successOnRequest;
   final bool readingInProgress;
   final bool readingPaused;
   final bool readingCanceled;
@@ -25,6 +26,7 @@ class BookInfo {
   final String coverLink;
 
   const BookInfo({
+    required this.successOnRequest,
     required this.readingInProgress,
     required this.readingPaused,
     required this.readingCanceled,
@@ -39,6 +41,7 @@ class BookInfo {
 
   factory BookInfo.fromJson(Map<String, dynamic> json) {
     return BookInfo(
+      successOnRequest: json['successOnRequest'] as bool,
       readingInProgress: json['readingInProgress'] as bool,
       readingPaused: json['readingPaused'] as bool,
       readingCanceled: json['readingCanceled'] as bool,
@@ -67,6 +70,7 @@ Future<List<BookInfo>> fetchBookInfo(http.Client client) async {
 
 // Fetch Book Info by ISBN code class
 class BookInfoByISBN {
+  final bool successOnRequest;
   final String title;
   final String author;
   final String publisher;
@@ -78,6 +82,7 @@ class BookInfoByISBN {
   final String ratingAverage;
 
   const BookInfoByISBN({
+    required this.successOnRequest,
     required this.title,
     required this.author,
     required this.publisher,
@@ -91,6 +96,7 @@ class BookInfoByISBN {
 
   factory BookInfoByISBN.fromJson(Map<String, dynamic> json) {
     return BookInfoByISBN(
+      successOnRequest: json['successOnRequest'] as bool,
       title: json['title'] as String,
       author: json['author'] as String,
       publisher: json['publisher'] as String,
@@ -124,16 +130,19 @@ Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(
 
 // Add Book by ISBN code class
 class BookAdded {
+  final bool successOnRequest;
   final String title;
   final String isbn;
 
   const BookAdded({
+    required this.successOnRequest,
     required this.title,
     required this.isbn,
   });
 
   factory BookAdded.fromJson(Map<String, dynamic> json) {
     return BookAdded(
+      successOnRequest: json['successOnRequest'] as bool,
       title: json['title'] as String,
       isbn: json['isbn'] as String,
     );

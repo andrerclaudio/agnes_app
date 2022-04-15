@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 import '../requests.dart';
 
 class ReadingScreen extends StatefulWidget {
@@ -67,19 +68,8 @@ class BookReadingList extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    var activeReadingIndex = <int>[];
-    var pausedReadingIndex = <int>[];
-
-    // Let's find the active readings and the ones that are paused
-    for (int i = 0; i < info.length; i++) {
-      if (info[i].readingInProgress) {
-        activeReadingIndex.add(i);
-      } else if (info[i].readingPaused) {
-        pausedReadingIndex.add(i);
-      }
-    }
-
-    if ((activeReadingIndex.isNotEmpty) || (pausedReadingIndex.isNotEmpty)) {
+    // Validate whether the answer ic valid or not
+    if (info[0].successOnRequest) {
       return SizedBox(
         height: height,
         width: width,
@@ -210,11 +200,7 @@ class BookReadingList extends StatelessWidget {
         ),
       );
     } else {
-      return SizedBox(
-        height: height,
-        width: width,
-        child: const Text('Text'),
-      );
+      return const Text('Text');
     }
   }
 }

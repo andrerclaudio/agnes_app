@@ -14,7 +14,6 @@ class Constant {
   // static const apiReadingScreenURL = 'http://api.agnes.ooo/query?function=readingScreen';
   static const apiBaseURL = 'http://192.168.0.163:8000/';
   static const apiReadingScreenURL = 'http://192.168.0.163:8000/query?function=readingScreen';
-  static const apiFetchBookInfoURL = 'http://192.168.0.163:8000/query?function=fetchBookInfo&isbn=9788581050157';
 
   // Login screen
   static const loginTitleText = 'Agnes';

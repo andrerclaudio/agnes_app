@@ -187,7 +187,7 @@ class BookInfoByIsbn extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    if (true) {
+    if (info[0].successOnRequest) {
       return SizedBox(
         height: height,
         width: width,
@@ -343,6 +343,8 @@ class BookInfoByIsbn extends StatelessWidget {
           ),
         ),
       );
+    } else {
+      return const Text('Text');
     }
   }
 }
