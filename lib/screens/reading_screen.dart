@@ -200,7 +200,23 @@ class BookReadingList extends StatelessWidget {
         ),
       );
     } else {
-      return const Text('Text');
+      return SizedBox(
+        height: height,
+        width: width,
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Container(
+            height: height * 0.3,
+            width: width * 0.5,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('./assets/graphics/no_books.png'),
+                fit: BoxFit.fitWidth,
+              ),
+            ),
+          ),
+        ),
+      );
     }
   }
 }

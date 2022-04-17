@@ -122,7 +122,8 @@ Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(
     http.Client client, String isbn) async {
   final response = await client.get(
     Uri.parse(
-        'http://192.168.0.163:8000/query?function=fetchBookInfo&isbn=$isbn'),
+        // 'http://192.168.0.163:8000/query?function=fetchBookInfo&isbn=$isbn'),
+        'http://api.agnes.ooo/query?function=fetchBookInfo&isbn=$isbn'),
   );
 
   return compute(parseBookInfoByIsbn, response.body);
@@ -159,7 +160,8 @@ Future<List<BookAdded>> addNewBookToShelf(
     http.Client client, String isbn) async {
   final response = await client.post(
     Uri.parse(
-        'http://192.168.0.163:8000/post?function=addNewReading&isbnCode=$isbn'),
+        // 'http://192.168.0.163:8000/post?function=addNewReading&isbnCode=$isbn'),
+        'http://api.agnes.ooo/post?function=addNewReading&isbnCode=$isbn'),
   );
 
   return compute(newBookInfo, response.body);
