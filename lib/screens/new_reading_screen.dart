@@ -419,32 +419,47 @@ class _AddingNewBookToShelfState extends State<AddingNewBookToShelf> {
               ),
             );
           } else if (snapshot.hasData) {
-            return AlertDialog(
-              backgroundColor: Colors.blueGrey,
-              title: const Text('Você adicionou o livro a sua estante!'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: const <Widget>[
-                    Text('A leitura foi iniciada.'),
-                    Text('Você verá o livro na aba "Lendo".'),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text(
-                    'Voltar',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+            // TODO - Parser the response.
+            List<BookAdded> info = snapshot.data!;
+            if (info[0].successOnRequest) {
+              return AlertDialog(
+                backgroundColor: Colors.blueGrey,
+                title: const Text('Você adicionou o livro a sua estante!'),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: const <Widget>[
+                      Text('A leitura foi iniciada.'),
+                      Text('Você verá o livro na aba "Lendo".'),
+                    ],
                   ),
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/home', (route) => false);
-                  },
                 ),
-              ],
-            );
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text(
+                      'Voltar',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pushNamedAndRemoveUntil('/home', (route) => false);
+                    },
+                  ),
+                ],
+              );
+            } else {
+              return Container(
+                height: height * 0.3,
+                width: width * 0.5,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('./assets/graphics/sorry.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              );
+            }
           } else {
             return const Center(
               child: CircularProgressIndicator(),
