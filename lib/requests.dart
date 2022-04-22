@@ -169,8 +169,8 @@ Future<List<BookAdded>> addNewBookToShelf(
     http.Client client, String isbn) async {
   final response = await client.post(
     Uri.parse(
-        // 'http://192.168.0.163:8000/post?function=addNewReading&isbnCode=$isbn'),
-        'http://api.agnes.ooo/post?function=addNewReading&isbnCode=$isbn'),
+        // 'http://192.168.0.163:8000/post?function=addNewBook&isbnCode=$isbn'),
+        'http://api.agnes.ooo/post?function=addNewBook&isbnCode=$isbn'),
   );
 
   return compute(newBookInfo, response.body);
