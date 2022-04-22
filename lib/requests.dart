@@ -84,6 +84,9 @@ class BookInfoByISBN {
   final String coverType;
   final String coverLink;
   final String ratingAverage;
+  final String description;
+  final String language;
+  final String link;
 
   const BookInfoByISBN({
     required this.successOnRequest,
@@ -97,6 +100,9 @@ class BookInfoByISBN {
     required this.coverType,
     required this.coverLink,
     required this.ratingAverage,
+    required this.description,
+    required this.language,
+    required this.link,
   });
 
   factory BookInfoByISBN.fromJson(Map<String, dynamic> json) {
@@ -112,6 +118,9 @@ class BookInfoByISBN {
       coverType: json['coverType'] as String,
       coverLink: json['coverLink'] as String,
       ratingAverage: json['ratingAverage'] as String,
+      description: json['description'] as String,
+      language: json['language'] as String,
+      link: json['link'] as String,
     );
   }
 }
