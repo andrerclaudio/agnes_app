@@ -1,4 +1,4 @@
-import 'package:agnes_app/requests.dart';
+import 'package:agnes_app/Generic/requests.dart';
 import 'package:flutter/material.dart';
 
 class UserReadingScreen extends StatefulWidget {

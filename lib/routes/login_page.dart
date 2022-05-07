@@ -1,4 +1,4 @@
-import 'package:agnes_app/constant.dart';
+import 'package:agnes_app/Generic/constant.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {

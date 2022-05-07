@@ -7,7 +7,7 @@ All requests are pointed to api.agnes.ooo
 
 import 'dart:convert';
 
-import 'package:agnes_app/constant.dart';
+import 'package:agnes_app/Generic/constant.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
