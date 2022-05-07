@@ -1,16 +1,16 @@
+import 'package:agnes_app/requests.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import '../requests.dart';
 
-class AddNewReading extends StatefulWidget {
-  const AddNewReading({Key? key}) : super(key: key);
+class AddNewBook extends StatefulWidget {
+  const AddNewBook({Key? key}) : super(key: key);
 
   @override
-  State<AddNewReading> createState() => _AddNewReadingState();
+  State<AddNewBook> createState() => _AddNewBookState();
 }
 
-class _AddNewReadingState extends State<AddNewReading> {
+class _AddNewBookState extends State<AddNewBook> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +70,7 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
                     decoration: const InputDecoration(
                       icon: Icon(Icons.format_size_sharp),
                       helperText:
-                          'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
+                      'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
                       helperMaxLines: 4,
                       labelText: 'Digite o código ISBN',
                     ),
@@ -122,7 +122,7 @@ class FetchBookInfo extends StatefulWidget {
 class FetchBookInfoState extends State<FetchBookInfo> {
   late Future<BookInfoByISBN> futureData;
   late final Future<List<BookInfoByISBN>> _fetchBookByIsbn =
-      fetchBookInfoByIsbn(http.Client(), widget.isbn);
+      fetchBookInfoByIsbn(widget.isbn);
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +165,7 @@ class FetchBookInfoState extends State<FetchBookInfo> {
               ),
             );
           } else if (snapshot.hasData) {
-            return BookInfoByIsbn(info: snapshot.data!);
+            return BookInfoByIsbn(data: snapshot.data!);
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -178,16 +178,30 @@ class FetchBookInfoState extends State<FetchBookInfo> {
 }
 
 class BookInfoByIsbn extends StatelessWidget {
-  const BookInfoByIsbn({Key? key, required this.info}) : super(key: key);
+  const BookInfoByIsbn({Key? key, required this.data}) : super(key: key);
 
-  final List<BookInfoByISBN> info;
+  final List<BookInfoByISBN> data;
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    if (info[0].successOnRequest) {
+    if (data[0].successOnRequest) {
+      final Map bookInfo = data[0].bookInfo;
+      final String coverLink = bookInfo['coverLink'];
+      final String title = bookInfo['title'];
+      final String author = bookInfo['author'];
+      final String publisher = bookInfo['publisher'];
+      final String isbn = bookInfo['isbn'];
+      final String pagesQty = bookInfo['pagesQty'];
+      final String description = bookInfo['description'];
+      final String link = bookInfo['link'];
+      final String genres = bookInfo['genres'];
+      final String coverType = bookInfo['coverType'];
+      final String language = bookInfo['language'];
+      final String ratingAverage = bookInfo['ratingAverage'];
+
       return SizedBox(
         height: height,
         width: width,
@@ -203,7 +217,7 @@ class BookInfoByIsbn extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       image: DecorationImage(
-                        image: NetworkImage(info[0].coverLink),
+                        image: NetworkImage(coverLink),
                         fit: BoxFit.fill,
                       ),
                       border: Border.all(
@@ -238,7 +252,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[0].title,
+                                  title,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -253,7 +267,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[0].author,
+                                  author,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -268,7 +282,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[0].publisher,
+                                  publisher,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -283,7 +297,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[0].isbn,
+                                  isbn,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -298,7 +312,7 @@ class BookInfoByIsbn extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[0].pagesQty,
+                                  pagesQty,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -324,7 +338,7 @@ class BookInfoByIsbn extends StatelessWidget {
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (BuildContext context) => AddingNewBookToShelf(
-                          isbn: info[0].isbn,
+                          isbn: isbn,
                         ),
                       ),
                     ),
@@ -376,7 +390,7 @@ class AddingNewBookToShelf extends StatefulWidget {
 class _AddingNewBookToShelfState extends State<AddingNewBookToShelf> {
   late Future<BookAdded> futureData;
   late final Future<List<BookAdded>> _addNewBookToShelf =
-      addNewBookToShelf(http.Client(), widget.isbn);
+  addNewBookToShelf(http.Client(), widget.isbn);
 
   @override
   Widget build(BuildContext context) {

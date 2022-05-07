@@ -5,9 +5,10 @@ import 'package:flutter/services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  // Set the Status Bar color as Black
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.black));
-
+  //Force the vertical orientation
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
@@ -21,8 +22,8 @@ class AgnesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Agnes Application UI',
-      initialRoute: '/',
+      title: 'Agnes Application',
+      initialRoute: '/home',
       routes: {
         '/': (context) => const LoginPage(title: 'Agnes'),
         '/home': (context) => const HomePage(),

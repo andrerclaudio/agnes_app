@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class NumbersScreen extends StatefulWidget {
-  const NumbersScreen({Key? key}) : super(key: key);
+class UserNumbersScreen extends StatefulWidget {
+  const UserNumbersScreen({Key? key}) : super(key: key);
 
   @override
-  NumbersScreenState createState() => NumbersScreenState();
+  UserNumbersScreenState createState() => UserNumbersScreenState();
 }
 
-class NumbersScreenState extends State<NumbersScreen> {
+class UserNumbersScreenState extends State<UserNumbersScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(

@@ -1,25 +1,25 @@
+import 'package:agnes_app/requests.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
-import '../requests.dart';
-
-class ReadingScreen extends StatefulWidget {
-  const ReadingScreen({Key? key}) : super(key: key);
+class UserReadingScreen extends StatefulWidget {
+  const UserReadingScreen({Key? key}) : super(key: key);
 
   @override
-  ReadingScreenState createState() => ReadingScreenState();
+  UserReadingScreenState createState() => UserReadingScreenState();
 }
 
-class ReadingScreenState extends State<ReadingScreen> {
-  late Future<BookInfo> futureData;
+class UserReadingScreenState extends State<UserReadingScreen> {
+  late Future<BookListStatus> futureData;
+  late final Future<List<BookListStatus>> _fetchBookListStatus =
+      fetchBookListStatus();
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return FutureBuilder<List<BookInfo>>(
-      future: fetchBookInfo(http.Client()),
+    return FutureBuilder<List<BookListStatus>>(
+      future: _fetchBookListStatus,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(
@@ -38,7 +38,7 @@ class ReadingScreenState extends State<ReadingScreen> {
                   ),
                 ),
                 const Text(
-                  'Ooops! Algo deu errado. Tente novamente.',
+                  'Oops! Algo deu errado. Tente novamente.',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                   softWrap: false,
                   overflow: TextOverflow.visible,
@@ -47,7 +47,7 @@ class ReadingScreenState extends State<ReadingScreen> {
             ),
           );
         } else if (snapshot.hasData) {
-          return BookReadingList(info: snapshot.data!);
+          return BooksList(data: snapshot.data!);
         } else {
           return const Center(
             child: CircularProgressIndicator(),
@@ -58,25 +58,33 @@ class ReadingScreenState extends State<ReadingScreen> {
   }
 }
 
-class BookReadingList extends StatelessWidget {
-  const BookReadingList({Key? key, required this.info}) : super(key: key);
+class BooksList extends StatelessWidget {
+  const BooksList({Key? key, required this.data}) : super(key: key);
 
-  final List<BookInfo> info;
+  final List<BookListStatus> data;
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    // Validate whether the answer ic valid or not
-    if (info[0].successOnRequest) {
+    // Validate whether the answer is valid or not
+    if (data[0].successOnRequest) {
       return SizedBox(
         height: height,
         width: width,
         child: ListView.builder(
           padding: const EdgeInsets.all(2),
-          itemCount: info.length,
+          itemCount: data.length,
           itemBuilder: (context, index) {
+            final Map bookInfo = data[index].bookInfo;
+            final String coverLink = bookInfo['coverLink'];
+            final String title = bookInfo['title'];
+            final String author = bookInfo['author'];
+            final String publisher = bookInfo['publisher'];
+            final String isbn = bookInfo['isbn'];
+            final String pagesQty = bookInfo['pagesQty'];
+
             return Padding(
               padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
               child: Row(
@@ -87,7 +95,7 @@ class BookReadingList extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       image: DecorationImage(
-                        image: NetworkImage(info[index].coverLink),
+                        image: NetworkImage(coverLink),
                         fit: BoxFit.fill,
                       ),
                       border: Border.all(
@@ -122,7 +130,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].title,
+                                  title,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -137,7 +145,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].author,
+                                  author,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -152,7 +160,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].publisher,
+                                  publisher,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -167,7 +175,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].isbn,
+                                  isbn,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),
@@ -182,7 +190,7 @@ class BookReadingList extends StatelessWidget {
                               ),
                               Flexible(
                                 child: Text(
-                                  info[index].pagesQty,
+                                  pagesQty,
                                   softWrap: true,
                                   overflow: TextOverflow.visible,
                                 ),

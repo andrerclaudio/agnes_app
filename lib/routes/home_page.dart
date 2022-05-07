@@ -1,11 +1,8 @@
-import 'package:agnes_app/screens/community_screen.dart';
+import 'package:agnes_app/constant.dart';
+import 'package:agnes_app/screens/add_book_screen.dart';
 import 'package:agnes_app/screens/numbers_screen.dart';
 import 'package:agnes_app/screens/reading_screen.dart';
-import 'package:agnes_app/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:agnes_app/constant.dart';
-
-import '../screens/new_reading_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,17 +15,15 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = Constant.initialIndex;
 
   final List<Widget> _widgetOptions = <Widget>[
-    const ReadingScreen(),
-    const NumbersScreen(),
-    const CommunityScreen(),
-    const SettingsScreen(),
+    const UserReadingScreen(),
+    const UserNumbersScreen(),
   ];
 
-  void _addNewReading() {
+  void _addNewBook() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return const AddNewReading();
+          return const AddNewBook();
         },
       ),
     );
@@ -56,20 +51,12 @@ class _HomePageState extends State<HomePage> {
         unselectedItemColor: Colors.white,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.insights),
+            icon: Icon(Icons.menu_book_sharp),
             label: 'Lendo',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calculate),
             label: 'Números',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            label: 'Comunidade',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Configs.',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -80,9 +67,9 @@ class _HomePageState extends State<HomePage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
-        onPressed: _addNewReading,
+        onPressed: _addNewBook,
         icon: const Icon(Icons.add),
-        label: const Text('Nova leitura'),
+        label: const Text('Novo livro'),
       ),
     );
   }
