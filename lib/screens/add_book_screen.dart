@@ -1,6 +1,5 @@
 import 'package:agnes_app/requests.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 
 class AddNewBook extends StatefulWidget {
@@ -337,7 +336,7 @@ class BookInfoByIsbn extends StatelessWidget {
                     child: const Text('Iniciar leitura'),
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (BuildContext context) => AddingNewBookToShelf(
+                        builder: (BuildContext context) => AddNewBookToShelf(
                           isbn: isbn,
                         ),
                       ),
@@ -379,18 +378,18 @@ class BookInfoByIsbn extends StatelessWidget {
   }
 }
 
-class AddingNewBookToShelf extends StatefulWidget {
-  const AddingNewBookToShelf({Key? key, required this.isbn}) : super(key: key);
+class AddNewBookToShelf extends StatefulWidget {
+  const AddNewBookToShelf({Key? key, required this.isbn}) : super(key: key);
   final String isbn;
 
   @override
-  State<AddingNewBookToShelf> createState() => _AddingNewBookToShelfState();
+  State<AddNewBookToShelf> createState() => _AddNewBookToShelfState();
 }
 
-class _AddingNewBookToShelfState extends State<AddingNewBookToShelf> {
+class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
   late Future<BookAdded> futureData;
   late final Future<List<BookAdded>> _addNewBookToShelf =
-  addNewBookToShelf(http.Client(), widget.isbn);
+      addNewBookToShelf(widget.isbn);
 
   @override
   Widget build(BuildContext context) {

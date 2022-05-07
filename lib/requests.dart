@@ -128,9 +128,8 @@ List<BookAdded> newBookInfo(String responseBody) {
   return parsed.map<BookAdded>((json) => BookAdded.fromJson(json)).toList();
 }
 
-Future<List<BookAdded>> addNewBookToShelf(
-    http.Client client, String isbn) async {
-  final response = await client.post(
+Future<List<BookAdded>> addNewBookToShelf(String isbn) async {
+  final response = await http.Client().post(
     Uri.parse(
         'http://192.168.0.163:8000/post?function=addNewBook&isbnCode=$isbn'),
     //'http://api.agnes.ooo/post?function=addNewBook&isbnCode=$isbn'),
