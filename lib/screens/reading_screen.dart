@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:agnes_app/Generic/requests.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +14,7 @@ class UserReadingScreen extends StatefulWidget {
 class UserReadingScreenState extends State<UserReadingScreen> {
   late Future<BookListStatus> futureData;
   late final Future<List<BookListStatus>> _fetchBookListStatus =
-      fetchBookListStatus();
+  fetchBookListStatus();
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +81,17 @@ class BooksList extends StatelessWidget {
           itemCount: data.length,
           itemBuilder: (context, index) {
             final Map bookInfo = data[index].bookInfo;
-            final String coverLink = bookInfo['coverLink'];
+            final String coverPic = bookInfo['coverPic'];
             final String title = bookInfo['title'];
             final String author = bookInfo['author'];
             final String publisher = bookInfo['publisher'];
             final String isbn = bookInfo['isbn'];
             final String pagesQty = bookInfo['pagesQty'];
+
+            // Convert the CoverPic Json String object into Image
+            final pic = json.decode(coverPic);
+            Uint8List _bytesImage = const Base64Decoder().convert(pic);
+            Image img = Image.memory(_bytesImage);
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
@@ -95,7 +103,7 @@ class BooksList extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       image: DecorationImage(
-                        image: NetworkImage(coverLink),
+                        image: img.image,
                         fit: BoxFit.fill,
                       ),
                       border: Border.all(

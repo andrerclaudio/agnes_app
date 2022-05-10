@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:agnes_app/Generic/requests.dart';
 import 'package:flutter/material.dart';
 
@@ -68,7 +71,7 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
                     decoration: const InputDecoration(
                       icon: Icon(Icons.format_size_sharp),
                       helperText:
-                          'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
+                      'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
                       helperMaxLines: 4,
                       labelText: 'Digite o código ISBN',
                     ),
@@ -120,7 +123,7 @@ class FetchBookInfo extends StatefulWidget {
 class FetchBookInfoState extends State<FetchBookInfo> {
   late Future<BookInfoByISBN> futureData;
   late final Future<List<BookInfoByISBN>> _fetchBookByIsbn =
-      fetchBookInfoByIsbn(widget.isbn);
+  fetchBookInfoByIsbn(widget.isbn);
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +190,7 @@ class BookInfoByIsbn extends StatelessWidget {
 
     if (data[0].successOnRequest) {
       final Map bookInfo = data[0].bookInfo;
-      final String coverLink = bookInfo['coverLink'];
+      final String coverPic = bookInfo['coverPic'];
       final String title = bookInfo['title'];
       final String author = bookInfo['author'];
       final String publisher = bookInfo['publisher'];
@@ -199,6 +202,11 @@ class BookInfoByIsbn extends StatelessWidget {
       final String coverType = bookInfo['coverType'];
       final String language = bookInfo['language'];
       final String ratingAverage = bookInfo['ratingAverage'];
+
+      // Convert the CoverPic Json String object into Image
+      final pic = json.decode(coverPic);
+      Uint8List _bytesImage = const Base64Decoder().convert(pic);
+      Image img = Image.memory(_bytesImage);
 
       return SizedBox(
         height: height,
@@ -215,7 +223,7 @@ class BookInfoByIsbn extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       image: DecorationImage(
-                        image: NetworkImage(coverLink),
+                        image: img.image,
                         fit: BoxFit.fill,
                       ),
                       border: Border.all(
@@ -388,7 +396,7 @@ class AddNewBookToShelf extends StatefulWidget {
 class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
   late Future<BookAdded> futureData;
   late final Future<List<BookAdded>> _addNewBookToShelf =
-      addNewBookToShelf(widget.isbn);
+  addNewBookToShelf(widget.isbn);
 
   @override
   Widget build(BuildContext context) {
