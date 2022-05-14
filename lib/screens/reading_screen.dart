@@ -14,7 +14,7 @@ class UserReadingScreen extends StatefulWidget {
 class UserReadingScreenState extends State<UserReadingScreen> {
   late Future<BookListStatus> futureData;
   late final Future<List<BookListStatus>> _fetchBookListStatus =
-  fetchBookListStatus();
+      fetchBookListStatus();
 
   @override
   Widget build(BuildContext context) {

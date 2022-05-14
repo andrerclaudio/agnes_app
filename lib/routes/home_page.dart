@@ -63,13 +63,17 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: const Color(Constant.objectsColorAmber),
         onTap: _onItemTapped,
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+      floatingActionButton: AnimatedOpacity(
+        opacity: false ? 0.0 : 0.8,
+        duration: const Duration(milliseconds: 1000),
+        child: FloatingActionButton.extended(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          onPressed: _addNewBook,
+          icon: const Icon(Icons.add),
+          label: const Text('Novo livro'),
         ),
-        onPressed: _addNewBook,
-        icon: const Icon(Icons.add),
-        label: const Text('Novo livro'),
       ),
     );
   }

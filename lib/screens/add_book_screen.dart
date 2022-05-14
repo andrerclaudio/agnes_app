@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -71,7 +72,7 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
                     decoration: const InputDecoration(
                       icon: Icon(Icons.format_size_sharp),
                       helperText:
-                      'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
+                          'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
                       helperMaxLines: 4,
                       labelText: 'Digite o código ISBN',
                     ),
@@ -123,7 +124,7 @@ class FetchBookInfo extends StatefulWidget {
 class FetchBookInfoState extends State<FetchBookInfo> {
   late Future<BookInfoByISBN> futureData;
   late final Future<List<BookInfoByISBN>> _fetchBookByIsbn =
-  fetchBookInfoByIsbn(widget.isbn);
+      fetchBookInfoByIsbn(widget.isbn);
 
   @override
   Widget build(BuildContext context) {
@@ -396,7 +397,7 @@ class AddNewBookToShelf extends StatefulWidget {
 class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
   late Future<BookAdded> futureData;
   late final Future<List<BookAdded>> _addNewBookToShelf =
-  addNewBookToShelf(widget.isbn);
+      addNewBookToShelf(widget.isbn);
 
   @override
   Widget build(BuildContext context) {
@@ -442,8 +443,13 @@ class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
             // TODO - Parser the response.
             List<BookAdded> info = snapshot.data!;
             if (info[0].successOnRequest) {
+              Future.delayed(const Duration(seconds: 3), () {
+                Navigator.of(context)
+                    .pushNamedAndRemoveUntil('/home', (route) => false);
+              });
+
               return AlertDialog(
-                backgroundColor: Colors.blueGrey,
+                backgroundColor: Colors.blueGrey[100],
                 title: const Text('Você adicionou o livro a sua estante!'),
                 content: SingleChildScrollView(
                   child: ListBody(
@@ -453,20 +459,6 @@ class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
                     ],
                   ),
                 ),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text(
-                      'Voltar',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context)
-                          .pushNamedAndRemoveUntil('/home', (route) => false);
-                    },
-                  ),
-                ],
               );
             } else {
               return Container(
