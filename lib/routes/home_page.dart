@@ -1,4 +1,4 @@
-import 'package:agnes_app/Generic/constant.dart';
+import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/screens/add_book_screen.dart';
 import 'package:agnes_app/screens/numbers_screen.dart';
 import 'package:agnes_app/screens/reading_screen.dart';

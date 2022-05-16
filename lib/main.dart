@@ -23,7 +23,7 @@ class AgnesApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Agnes Application',
-      initialRoute: '/home',
+      initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(title: 'Agnes'),
         '/home': (context) => const HomePage(),

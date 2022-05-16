@@ -7,7 +7,7 @@ All requests are pointed to api.agnes.ooo
 
 import 'dart:convert';
 
-import 'package:agnes_app/Generic/constant.dart';
+import 'package:agnes_app/generic/constant.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -53,8 +53,15 @@ List<BookListStatus> parseBookListStatus(String responseBody) {
 }
 
 Future<List<BookListStatus>> fetchBookListStatus() async {
-  final response =
-      await http.Client().get(Uri.parse(Constant.apiReadingScreenURL));
+  const String token = '';
+  final response = await http.Client().get(
+    Uri.parse(Constant.apiReadingScreenURL),
+    headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+  );
 
   return compute(parseBookListStatus, response.body);
 }
@@ -89,9 +96,15 @@ List<BookInfoByISBN> parseBookInfoByIsbn(String responseBody) {
 }
 
 Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(String isbn) async {
+  const String token = '';
   final response = await http.Client().get(
     Uri.parse(
         'http://192.168.0.163:8000/query?function=fetchBookInfo&isbn=$isbn'),
+    headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
     // 'http://api.agnes.ooo/query?function=fetchBookInfo&isbn=$isbn'),
   );
 
@@ -129,9 +142,15 @@ List<BookAdded> newBookInfo(String responseBody) {
 }
 
 Future<List<BookAdded>> addNewBookToShelf(String isbn) async {
+  const String token = '';
   final response = await http.Client().post(
     Uri.parse(
         'http://192.168.0.163:8000/post?function=addNewBook&isbnCode=$isbn'),
+    headers: {
+      "Content-Type": "application/json",
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
     // 'http://api.agnes.ooo/post?function=addNewBook&isbnCode=$isbn'),
   );
 

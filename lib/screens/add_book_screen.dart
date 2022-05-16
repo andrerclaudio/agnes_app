@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:agnes_app/Generic/requests.dart';
+import 'package:agnes_app/generic/requests.dart';
 import 'package:flutter/material.dart';
 
 class AddNewBook extends StatefulWidget {
