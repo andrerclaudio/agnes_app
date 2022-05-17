@@ -1,7 +1,8 @@
-import 'package:agnes_app/routes/home_page.dart';
-import 'package:agnes_app/routes/login_page.dart';
+import 'package:agnes_app/views/home_view.dart';
+import 'package:agnes_app/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +32,8 @@ class AgnesApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
+        textTheme: GoogleFonts.nunitoSansTextTheme(Theme.of(context).textTheme),
+
         primarySwatch: Colors.grey,
         scaffoldBackgroundColor: Colors.white,
       ),

@@ -1,13 +1,10 @@
 import 'package:agnes_app/generic/constant.dart';
+import 'package:agnes_app/models/storage_item.dart';
+import 'package:agnes_app/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
   final String title;
 
   @override
@@ -15,6 +12,25 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final StorageService _storageService = StorageService();
+  late List<StorageItem> _items;
+  bool _loading = true;
+
+  void initList() async {
+    _items = await _storageService.readAllSecureData();
+    _loading = false;
+
+    // await _storageService.deleteSecureData(StorageItem('abc', '_'));
+    // await _storageService.writeSecureData(StorageItem('abc', '123'));
+  }
+
+  // Initialize the safe content.
+  @override
+  void initState() {
+    super.initState();
+    initList();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;

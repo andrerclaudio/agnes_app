@@ -1,7 +1,7 @@
 import 'package:agnes_app/generic/constant.dart';
-import 'package:agnes_app/screens/add_book_screen.dart';
-import 'package:agnes_app/screens/numbers_screen.dart';
-import 'package:agnes_app/screens/reading_screen.dart';
+import 'package:agnes_app/widgets/add_book_dialog.dart';
+import 'package:agnes_app/widgets/user_numbers.dart';
+import 'package:agnes_app/widgets/user_shelf.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
