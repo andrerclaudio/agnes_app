@@ -14,14 +14,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final StorageService _storageService = StorageService();
   late List<StorageItem> _items;
-  bool _loading = true;
 
   void initList() async {
-    _items = await _storageService.readAllSecureData();
-    _loading = false;
+    // await _storageService.writeSecureData(StorageItem('firsLogin', 'agnes'));
 
-    // await _storageService.deleteSecureData(StorageItem('abc', '_'));
-    // await _storageService.writeSecureData(StorageItem('abc', '123'));
+    if (await _storageService.containsKeyInSecureData('firsLogin')) {
+      Navigator.pushNamed(context, '/home');
+    }
   }
 
   // Initialize the safe content.
