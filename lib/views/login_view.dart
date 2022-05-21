@@ -1,6 +1,8 @@
 import 'package:agnes_app/generic/constant.dart';
-import 'package:agnes_app/models/storage_item.dart';
-import 'package:agnes_app/services/secure_storage.dart';
+import 'package:agnes_app/widgets/login/sign_up_dialog.dart';
+
+// import 'package:agnes_app/models/storage_item.dart';
+// import 'package:agnes_app/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -12,23 +14,23 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final StorageService _storageService = StorageService();
-  late List<StorageItem> _items;
+  // final StorageService _storageService = StorageService();
+  // late List<StorageItem> _items;
 
-  void initList() async {
-    // await _storageService.writeSecureData(StorageItem('firsLogin', 'agnes'));
-
-    if (await _storageService.containsKeyInSecureData('firsLogin')) {
-      Navigator.pushNamed(context, '/home');
-    }
-  }
+  // void initList() async {
+  //   // await _storageService.writeSecureData(StorageItem('firstLogin', 'agnes'));
+  //
+  //   // if (await _storageService.containsKeyInSecureData('firstLogin')) {
+  //   //   Navigator.pushNamed(context, '/home');
+  //   // }
+  // }
 
   // Initialize the safe content.
-  @override
-  void initState() {
-    super.initState();
-    initList();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   initList();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -102,6 +104,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Text(Constant.doNotHaveAccountText),
                   TextButton(
@@ -110,11 +113,14 @@ class _LoginPageState extends State<LoginPage> {
                       style: Constant.signUpTextStyle,
                     ),
                     onPressed: () {
-                      //signup screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SigUpInit()),
+                      );
                     },
-                  )
+                  ),
                 ],
-                mainAxisAlignment: MainAxisAlignment.center,
               ),
             ],
           ),

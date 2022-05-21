@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:agnes_app/generic/requests.dart';
+import 'package:agnes_app/models/book_item.dart';
 import 'package:flutter/material.dart';
 
 class AddNewBook extends StatefulWidget {
@@ -197,17 +198,17 @@ class BookInfoByIsbn extends StatelessWidget {
       final String publisher = bookInfo['publisher'];
       final String isbn = bookInfo['isbn'];
       final String pagesQty = bookInfo['pagesQty'];
-      final String description = bookInfo['description'];
-      final String link = bookInfo['link'];
-      final String genres = bookInfo['genres'];
-      final String coverType = bookInfo['coverType'];
-      final String language = bookInfo['language'];
-      final String ratingAverage = bookInfo['ratingAverage'];
+      // final String description = bookInfo['description'];
+      // final String link = bookInfo['link'];
+      // final String genres = bookInfo['genres'];
+      // final String coverType = bookInfo['coverType'];
+      // final String language = bookInfo['language'];
+      // final String ratingAverage = bookInfo['ratingAverage'];
 
       // Convert the CoverPic Json String object into Image
       final pic = json.decode(coverPic);
-      Uint8List _bytesImage = const Base64Decoder().convert(pic);
-      Image img = Image.memory(_bytesImage);
+      Uint8List bytesImage = const Base64Decoder().convert(pic);
+      Image img = Image.memory(bytesImage);
 
       return SizedBox(
         height: height,

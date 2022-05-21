@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:agnes_app/generic/requests.dart';
+import 'package:agnes_app/models/book_item.dart';
 import 'package:flutter/material.dart';
 
 class UserReadingScreen extends StatefulWidget {
@@ -90,8 +91,8 @@ class BooksList extends StatelessWidget {
 
             // Convert the CoverPic Json String object into Image
             final pic = json.decode(coverPic);
-            Uint8List _bytesImage = const Base64Decoder().convert(pic);
-            Image img = Image.memory(_bytesImage);
+            Uint8List bytesImage = const Base64Decoder().convert(pic);
+            Image img = Image.memory(bytesImage);
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
