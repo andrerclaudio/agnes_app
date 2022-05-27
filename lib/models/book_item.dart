@@ -76,16 +76,45 @@ class BookAdded {
 class EmailAdded {
   final bool successOnRequest;
   final int errorCode;
+  final String userEmail;
+  final int attemptsToValidate;
 
   const EmailAdded({
     required this.successOnRequest,
     required this.errorCode,
+    required this.userEmail,
+    required this.attemptsToValidate,
   });
 
   factory EmailAdded.fromJson(Map<String, dynamic> json) {
     return EmailAdded(
       successOnRequest: json['successOnRequest'] as bool,
       errorCode: json['errorCode'] as int,
+      userEmail: json['userEmail'] as String,
+      attemptsToValidate: json['attemptsToValidate'] as int,
+    );
+  }
+}
+
+class CreateUser {
+  final bool successOnRequest;
+  final int errorCode;
+  final String userId;
+  final int lastAccess;
+
+  const CreateUser({
+    required this.successOnRequest,
+    required this.errorCode,
+    required this.userId,
+    required this.lastAccess,
+  });
+
+  factory CreateUser.fromJson(Map<String, dynamic> json) {
+    return CreateUser(
+      successOnRequest: json['successOnRequest'] as bool,
+      errorCode: json['errorCode'] as int,
+      userId: json['userId'] as String,
+      lastAccess: json['lastAccess'] as int,
     );
   }
 }

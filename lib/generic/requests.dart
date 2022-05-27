@@ -48,13 +48,13 @@ Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(String isbn) async {
   const String token = '';
   final response = await http.Client().get(
     Uri.parse(
-        'http://192.168.0.163:8000/query?function=fetchBookInfo&isbn=$isbn'),
+        'http://192.168.0.163:8000/library/fetch_book_information?isbnCode=$isbn'),
     headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     },
-    // 'http://api.agnes.ooo/query?function=fetchBookInfo&isbn=$isbn'),
+    // 'http://api.agnes.ooo/library/fetch_book_information?isbnCode=$isbn'),
   );
 
   return compute(parseBookInfoByIsbn, response.body);
@@ -71,13 +71,13 @@ Future<List<BookAdded>> addNewBookToShelf(String isbn) async {
   const String token = '';
   final response = await http.Client().post(
     Uri.parse(
-        'http://192.168.0.163:8000/post?function=addNewBook&isbnCode=$isbn'),
+        'http://192.168.0.163:8000/user/shelf/add_new_book?isbnCode=$isbn'),
     headers: {
       "Content-Type": "application/json",
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     },
-    // 'http://api.agnes.ooo/post?function=addNewBook&isbnCode=$isbn'),
+    // 'http://api.agnes.ooo/user/shelf/add_new_book?isbnCode=$isbn'),
   );
 
   return compute(newBookInfo, response.body);
@@ -92,10 +92,25 @@ List<EmailAdded> newEmailInfo(String responseBody) {
 
 Future<List<EmailAdded>> addEmailToApp(String email) async {
   final response = await http.Client().post(
-    Uri.parse(
-        'http://192.168.0.163:8000/unknown?function=validateEmail&email=$email'),
-    // 'http://api.agnes.ooo/unknown?function=validateEmail&email=$email'),
+    Uri.parse('http://192.168.0.163:8000/unknown/validate_email?email=$email'),
+    // 'http://api.agnes.ooo/unknown/validate_email?email=$email'),
   );
 
   return compute(newEmailInfo, response.body);
+}
+
+// Add User to Application
+List<CreateUser> newUserInfo(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<CreateUser>((json) => CreateUser.fromJson(json)).toList();
+}
+
+Future<List<CreateUser>> addUserToApp(String email) async {
+  final response = await http.Client().post(
+    Uri.parse('http://192.168.0.163:8000/unknown/create_user?email=$email'),
+    // 'http://api.agnes.ooo/unknown/create_user?email=$email'),
+  );
+
+  return compute(newUserInfo, response.body);
 }
