@@ -25,11 +25,7 @@ Future<List<BookListStatus>> fetchBookListStatus() async {
   const String token = '';
   final response = await http.Client().get(
     Uri.parse(Constant.apiReadingScreenURL),
-    headers: {
-      "Content-Type": "application/json",
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    },
+    headers: {"Content-Type": "application/json"},
   );
 
   return compute(parseBookListStatus, response.body);
@@ -49,12 +45,8 @@ Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(String isbn) async {
   final response = await http.Client().get(
     Uri.parse(
         'http://192.168.0.163:8000/library/fetch_book_information?isbnCode=$isbn'),
-    headers: {
-      "Content-Type": "application/json",
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    },
     // 'http://api.agnes.ooo/library/fetch_book_information?isbnCode=$isbn'),
+    headers: {"Content-Type": "application/json"},
   );
 
   return compute(parseBookInfoByIsbn, response.body);
@@ -72,31 +64,51 @@ Future<List<BookAdded>> addNewBookToShelf(String isbn) async {
   final response = await http.Client().post(
     Uri.parse(
         'http://192.168.0.163:8000/user/shelf/add_new_book?isbnCode=$isbn'),
-    headers: {
-      "Content-Type": "application/json",
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $token',
-    },
     // 'http://api.agnes.ooo/user/shelf/add_new_book?isbnCode=$isbn'),
+    headers: {"Content-Type": "application/json"},
   );
 
   return compute(newBookInfo, response.body);
 }
 
 // Add Email to Application
-List<EmailAdded> newEmailInfo(String responseBody) {
+List<VerificationStep> newEmailInfo(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-  return parsed.map<EmailAdded>((json) => EmailAdded.fromJson(json)).toList();
+  return parsed
+      .map<VerificationStep>((json) => VerificationStep.fromJson(json))
+      .toList();
 }
 
-Future<List<EmailAdded>> addEmailToApp(String email) async {
+Future<List<VerificationStep>> addEmailToApp(String email) async {
   final response = await http.Client().post(
     Uri.parse('http://192.168.0.163:8000/unknown/validate_email?email=$email'),
-    // 'http://api.agnes.ooo/unknown/validate_email?email=$email'),
+    // Uri.parse('http://api.agnes.ooo/unknown/validate_email?email=$email'),
+    headers: {"Content-Type": "application/json"},
   );
 
   return compute(newEmailInfo, response.body);
+}
+
+// Check the Verification Code sent to email
+List<VerificationStep> checkCode(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed
+      .map<VerificationStep>((json) => VerificationStep.fromJson(json))
+      .toList();
+}
+
+Future<List<VerificationStep>> checkVerificationCode(
+    String email, String code) async {
+  final response = await http.Client().get(
+    Uri.parse(
+        'http://192.168.0.163:8000/unknown/validate_code?email=$email&code=$code'),
+    // 'http://api.agnes.ooo/unknown/validate_code?email=$email&code=$code'),
+    headers: {"Content-Type": "application/json"},
+  );
+
+  return compute(checkCode, response.body);
 }
 
 // Add User to Application
@@ -106,10 +118,12 @@ List<CreateUser> newUserInfo(String responseBody) {
   return parsed.map<CreateUser>((json) => CreateUser.fromJson(json)).toList();
 }
 
-Future<List<CreateUser>> addUserToApp(String email) async {
+Future<List<CreateUser>> addUserToApp(String email, String password) async {
   final response = await http.Client().post(
-    Uri.parse('http://192.168.0.163:8000/unknown/create_user?email=$email'),
-    // 'http://api.agnes.ooo/unknown/create_user?email=$email'),
+    Uri.parse(
+        'http://192.168.0.163:8000/unknown/create_user?email=$email&password=$password'),
+    // Uri.parse('http://api.agnes.ooo/unknown/create_user?email=$email'),
+    headers: {"Content-Type": "application/json"},
   );
 
   return compute(newUserInfo, response.body);

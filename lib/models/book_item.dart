@@ -73,21 +73,21 @@ class BookAdded {
   }
 }
 
-class EmailAdded {
+class VerificationStep {
   final bool successOnRequest;
   final int errorCode;
   final String userEmail;
   final int attemptsToValidate;
 
-  const EmailAdded({
+  const VerificationStep({
     required this.successOnRequest,
     required this.errorCode,
     required this.userEmail,
     required this.attemptsToValidate,
   });
 
-  factory EmailAdded.fromJson(Map<String, dynamic> json) {
-    return EmailAdded(
+  factory VerificationStep.fromJson(Map<String, dynamic> json) {
+    return VerificationStep(
       successOnRequest: json['successOnRequest'] as bool,
       errorCode: json['errorCode'] as int,
       userEmail: json['userEmail'] as String,
