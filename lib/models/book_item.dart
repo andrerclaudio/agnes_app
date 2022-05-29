@@ -73,21 +73,23 @@ class BookAdded {
   }
 }
 
-class VerificationStep {
+// Send the chosen user Email to Application -----------------------------------
+
+class UserEmailForm {
   final bool successOnRequest;
   final int errorCode;
   final String userEmail;
   final int attemptsToValidate;
 
-  const VerificationStep({
+  const UserEmailForm({
     required this.successOnRequest,
     required this.errorCode,
     required this.userEmail,
     required this.attemptsToValidate,
   });
 
-  factory VerificationStep.fromJson(Map<String, dynamic> json) {
-    return VerificationStep(
+  factory UserEmailForm.fromJson(Map<String, dynamic> json) {
+    return UserEmailForm(
       successOnRequest: json['successOnRequest'] as bool,
       errorCode: json['errorCode'] as int,
       userEmail: json['userEmail'] as String,
@@ -95,6 +97,8 @@ class VerificationStep {
     );
   }
 }
+
+// -----------------------------------------------------------------------------
 
 class CreateUser {
   final bool successOnRequest;

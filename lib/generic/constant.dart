@@ -8,6 +8,7 @@ class Constant {
   static const textColorAmber = 0xffff8f00;
   static const textColorBrown = 0xff4e342e;
   static const objectsColorAmber = 0xffff8f00;
+  static const objectsColor = 0xff17bcce;
 
   // Api related
   // static const apiBaseURL = 'http://api.agnes.ooo/';

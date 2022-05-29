@@ -12,6 +12,38 @@ import 'package:agnes_app/models/book_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
+// Send the chosen user Email to Application -----------------------------------
+
+List<UserEmailForm> userEmailInfo(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed
+      .map<UserEmailForm>((json) => UserEmailForm.fromJson(json))
+      .toList();
+}
+
+Future<List<UserEmailForm>> addEmailToApp(String email) async {
+  final response = await http.Client().post(
+    Uri.parse('http://192.168.0.163:8000/unknown/validate_email?email=$email'),
+    // Uri.parse('http://api.agnes.ooo/unknown/validate_email?email=$email'),
+    headers: {"Content-Type": "application/json"},
+  );
+
+  if ((response.statusCode == 200) || (response.statusCode == 201)) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return compute(userEmailInfo, response.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+
+  // return compute(userEmailInfo, response.body);
+}
+
+// -----------------------------------------------------------------------------
+
 // Reading screen class
 List<BookListStatus> parseBookListStatus(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
@@ -71,35 +103,16 @@ Future<List<BookAdded>> addNewBookToShelf(String isbn) async {
   return compute(newBookInfo, response.body);
 }
 
-// Add Email to Application
-List<VerificationStep> newEmailInfo(String responseBody) {
-  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-
-  return parsed
-      .map<VerificationStep>((json) => VerificationStep.fromJson(json))
-      .toList();
-}
-
-Future<List<VerificationStep>> addEmailToApp(String email) async {
-  final response = await http.Client().post(
-    Uri.parse('http://192.168.0.163:8000/unknown/validate_email?email=$email'),
-    // Uri.parse('http://api.agnes.ooo/unknown/validate_email?email=$email'),
-    headers: {"Content-Type": "application/json"},
-  );
-
-  return compute(newEmailInfo, response.body);
-}
-
 // Check the Verification Code sent to email
-List<VerificationStep> checkCode(String responseBody) {
+List<UserEmailForm> checkCode(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed
-      .map<VerificationStep>((json) => VerificationStep.fromJson(json))
+      .map<UserEmailForm>((json) => UserEmailForm.fromJson(json))
       .toList();
 }
 
-Future<List<VerificationStep>> checkVerificationCode(
+Future<List<UserEmailForm>> checkVerificationCode(
     String email, String code) async {
   final response = await http.Client().get(
     Uri.parse(

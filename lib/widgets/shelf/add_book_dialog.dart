@@ -32,17 +32,10 @@ class _AskIsbnCode extends StatefulWidget {
   const _AskIsbnCode({Key? key}) : super(key: key);
 
   @override
-  _AskIsbnCodeState createState() {
-    return _AskIsbnCodeState();
-  }
+  _AskIsbnCodeState createState() => _AskIsbnCodeState();
 }
 
 class _AskIsbnCodeState extends State<_AskIsbnCode> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
   @override

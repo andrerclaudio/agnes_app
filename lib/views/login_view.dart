@@ -1,9 +1,11 @@
+// Local
+// Application
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/widgets/login/sign_up_dialog.dart';
+import 'package:flutter/material.dart';
 
 // import 'package:agnes_app/models/storage_item.dart';
 // import 'package:agnes_app/services/secure_storage.dart';
-import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key, required this.title}) : super(key: key);
@@ -37,7 +39,7 @@ class _LoginPageState extends State<LoginPage> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    TextEditingController nameController = TextEditingController();
+    TextEditingController emailController = TextEditingController();
     TextEditingController passwordController = TextEditingController();
 
     return Scaffold(
@@ -65,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
               Container(
                 padding: const EdgeInsets.all(10),
                 child: TextField(
-                  controller: nameController,
+                  controller: emailController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: Constant.labelTextEmail,
@@ -116,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const SigUpInit()),
+                            builder: (context) => const SigUpInit(index: 0)),
                       );
                     },
                   ),

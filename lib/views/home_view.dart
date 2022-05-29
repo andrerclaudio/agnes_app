@@ -1,7 +1,8 @@
+// Local
+// Application
 import 'package:agnes_app/generic/constant.dart';
-import 'package:agnes_app/widgets/add_book_dialog.dart';
-import 'package:agnes_app/widgets/user_numbers.dart';
-import 'package:agnes_app/widgets/user_shelf.dart';
+import 'package:agnes_app/widgets/shelf/add_book_dialog.dart';
+import 'package:agnes_app/widgets/shelf/user_shelf.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,7 +17,6 @@ class HomePageState extends State<HomePage> {
 
   final List<Widget> _widgetOptions = <Widget>[
     const UserReadingScreen(),
-    const UserNumbersScreen(),
   ];
 
   void _addNewBook() {
@@ -54,10 +54,6 @@ class HomePageState extends State<HomePage> {
             icon: Icon(Icons.menu_book_sharp),
             label: 'Lendo',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calculate),
-            label: 'Números',
-          ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(Constant.objectsColorAmber),
@@ -72,7 +68,7 @@ class HomePageState extends State<HomePage> {
           ),
           onPressed: _addNewBook,
           icon: const Icon(Icons.add),
-          label: const Text('Novo livro'),
+          label: const Text('Nova leitura!'),
         ),
       ),
     );
