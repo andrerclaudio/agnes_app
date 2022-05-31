@@ -38,8 +38,6 @@ Future<List<UserEmailForm>> addEmailToApp(String email) async {
     // then throw an exception.
     throw Exception('Failed to load album');
   }
-
-  // return compute(userEmailInfo, response.body);
 }
 
 // -----------------------------------------------------------------------------

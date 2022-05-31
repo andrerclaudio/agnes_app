@@ -44,21 +44,6 @@ class _AskUserEmail extends StatefulWidget {
 
 class _AskUserEmailState extends State<_AskUserEmail> {
   final _formKey = GlobalKey<FormState>();
-  bool _isValid = false;
-  late String _email;
-
-  void _saveForm() {
-    setState(() {
-      _isValid = _formKey.currentState!.validate();
-      if (_isValid) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (BuildContext context) => _SendUserEmail(email: _email),
-          ),
-        );
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,23 +75,28 @@ class _AskUserEmailState extends State<_AskUserEmail> {
                   if (value == null || value.isEmpty) {
                     return 'This field is required';
                   }
-                  // using regular expression
-                  if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                  if (!RegExp(
+                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+.[a-zA-Z]+")
+                      .hasMatch(value)) {
                     return "Please enter a valid email address";
                   }
                   // the email is valid
                   return null;
                 },
               ),
-              const SizedBox(height: 25),
               TextButton(
                 onPressed: () {
-                  _email = email.text;
-                  _saveForm();
+                  if (_formKey.currentState!.validate()) {
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            _SendUserEmail(email: email.text),
+                      ),
+                    );
+                  }
                 },
                 child: const Text('Check Email'),
               ),
-              const SizedBox(height: 25),
             ],
           ),
         ),
@@ -141,45 +131,70 @@ class _SendUserEmailState extends State<_SendUserEmail> {
           height: MediaQuery.of(context).padding.top,
         ),
       ),
-      body: SizedBox(
-        height: height,
-        width: width,
-        child: FutureBuilder<List<UserEmailForm>>(
-          future: _sendEmail,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              List<UserEmailForm> info = snapshot.data!;
+      body: FutureBuilder<List<UserEmailForm>>(
+        future: _sendEmail,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<UserEmailForm> info = snapshot.data!;
 
-              if (info[0].successOnRequest) {
-                Navigator.of(context).push(
+            if (info[0].successOnRequest) {
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.of(context).pop();
+
+                Navigator.push(
+                  context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) => const _SendUserCode(),
+                    builder: (context) => const SigUpInit(
+                      index: 1,
+                    ),
                   ),
                 );
-              } else {
-                // TODO Parse the problem
-                MaterialPageRoute(
-                  builder: (BuildContext context) => const SigUpInit(index: 0),
-                );
-              }
-            }
+              });
 
-            if (snapshot.hasError) {
+              return const SizedBox();
+            } else {
               // TODO Parse the problem
-              MaterialPageRoute(
-                builder: (BuildContext context) => const SigUpInit(index: 0),
-              );
-            }
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.of(context).pop();
 
-            return Center(
-              child: SpinKitChasingDots(
-                color: const Color(Constant.objectsColor),
-                size: width * 0.3,
-                duration: const Duration(milliseconds: 1200),
-              ),
-            );
-          },
-        ),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SigUpInit(
+                      index: 0,
+                    ),
+                  ),
+                );
+              });
+
+              return const SizedBox();
+            }
+          } else if (snapshot.hasError) {
+            // TODO Parse the problem
+            Future.delayed(const Duration(seconds: 0), () {
+              Navigator.of(context).pop();
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SigUpInit(
+                    index: 0,
+                  ),
+                ),
+              );
+            });
+
+            return const SizedBox();
+          }
+
+          return Center(
+            child: SpinKitChasingDots(
+              color: const Color(Constant.objectsColor),
+              size: width * 0.3,
+              duration: const Duration(milliseconds: 1500),
+            ),
+          );
+        },
       ),
     );
   }
