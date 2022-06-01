@@ -118,9 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const SigUpInit(
-                            index: 0,
-                          ),
+                          builder: (context) => const SigUpInit(),
                         ),
                       );
                     },

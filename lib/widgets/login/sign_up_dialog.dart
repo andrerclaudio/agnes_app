@@ -5,22 +5,16 @@ import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_verification_code/flutter_verification_code.dart';
 
 class SigUpInit extends StatefulWidget {
-  const SigUpInit({Key? key, required this.index}) : super(key: key);
-
-  final int index;
+  const SigUpInit({Key? key}) : super(key: key);
 
   @override
   State<SigUpInit> createState() => _SigUpInitState();
 }
 
 class _SigUpInitState extends State<SigUpInit> {
-  final List<Widget> _widgetOptions = <Widget>[
-    const _AskUserEmail(),
-    const _SendUserCode(),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +24,7 @@ class _SigUpInitState extends State<SigUpInit> {
           height: MediaQuery.of(context).padding.top,
         ),
       ),
-      body: _widgetOptions.elementAt(widget.index),
+      body: const _AskUserEmail(),
     );
   }
 }
@@ -122,7 +116,6 @@ class _SendUserEmailState extends State<_SendUserEmail> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -137,6 +130,7 @@ class _SendUserEmailState extends State<_SendUserEmail> {
           if (snapshot.hasData) {
             List<UserEmailForm> info = snapshot.data!;
 
+            // The email was checked
             if (info[0].successOnRequest) {
               Future.delayed(const Duration(seconds: 0), () {
                 Navigator.of(context).pop();
@@ -144,47 +138,19 @@ class _SendUserEmailState extends State<_SendUserEmail> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const SigUpInit(
-                      index: 1,
-                    ),
+                    builder: (context) => _AskUserCode(email: widget.email),
                   ),
                 );
               });
 
               return const SizedBox();
             } else {
-              // TODO Parse the problem
-              Future.delayed(const Duration(seconds: 0), () {
-                Navigator.of(context).pop();
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SigUpInit(
-                      index: 0,
-                    ),
-                  ),
-                );
-              });
-
-              return const SizedBox();
+              // Email already in use Error Message
+              return const EmailAlreadyInUseMessage();
             }
           } else if (snapshot.hasError) {
-            // TODO Parse the problem
-            Future.delayed(const Duration(seconds: 0), () {
-              Navigator.of(context).pop();
-
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const SigUpInit(
-                    index: 0,
-                  ),
-                ),
-              );
-            });
-
-            return const SizedBox();
+            // Unknown Error Message
+            return const UnknownErrorMessage();
           }
 
           return Center(
@@ -202,24 +168,173 @@ class _SendUserEmailState extends State<_SendUserEmail> {
 
 // -----------------------------------------------------------------------------
 
+class _AskUserCode extends StatefulWidget {
+  const _AskUserCode({Key? key, required this.email}) : super(key: key);
+
+  final String email;
+
+  @override
+  State<_AskUserCode> createState() => _AskUserCodeState();
+}
+
+class _AskUserCodeState extends State<_AskUserCode> {
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: Column(
+        children: <Widget>[
+          const Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Center(
+              child: Text(
+                'Por favor, digite o código recebido no email que cadastrado.',
+                overflow: TextOverflow.visible,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: width,
+            child: Center(
+              child: VerificationCode(
+                keyboardType: TextInputType.number,
+                underlineColor: const Color(Constant.objectsColor),
+                length: 6,
+                isSecure: true,
+                fullBorder: true,
+                cursorColor: const Color(Constant.objectsColor),
+                onCompleted: (String value) {
+                  setState(
+                    () {
+                      Navigator.of(context).pop();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => _SendUserCode(
+                            code: value,
+                            email: widget.email,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+                onEditing: (bool value) {
+                  setState(() {});
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _SendUserCode extends StatefulWidget {
-  const _SendUserCode({Key? key}) : super(key: key);
+  const _SendUserCode({Key? key, required this.code, required this.email})
+      : super(key: key);
+
+  final String email;
+  final String code;
 
   @override
   State<_SendUserCode> createState() => _SendUserCodeState();
 }
 
 class _SendUserCodeState extends State<_SendUserCode> {
-  final _formKey = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox();
+  }
+}
+
+class EmailAlreadyInUseMessage extends StatelessWidget {
+  const EmailAlreadyInUseMessage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController code = TextEditingController();
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return const Text('Code');
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: height * 0.3,
+              width: width * 0.5,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('./assets/graphics/sorry.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            const Text(
+              'Oops! O email que você está usando já está sendo utilizado.\n'
+              'Tente outro, por favor!',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              maxLines: 4,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class UnknownErrorMessage extends StatelessWidget {
+  const UnknownErrorMessage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: height * 0.3,
+              width: width * 0.5,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('./assets/graphics/sorry.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            const Text(
+              'Oops! Alguma coisa inesperada aconteceu.\n'
+              'Tente novamente, por favor!',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              maxLines: 4,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
