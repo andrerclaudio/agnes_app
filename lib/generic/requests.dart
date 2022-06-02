@@ -12,17 +12,17 @@ import 'package:agnes_app/models/book_item.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
-// Send the chosen user Email to Application -----------------------------------
-
-List<UserEmailForm> userEmailInfo(String responseBody) {
+// Send the User Email to Application ------------------------------------------
+List<UserSignUpCredentials> userEmailInfo(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed
-      .map<UserEmailForm>((json) => UserEmailForm.fromJson(json))
+      .map<UserSignUpCredentials>(
+          (json) => UserSignUpCredentials.fromJson(json))
       .toList();
 }
 
-Future<List<UserEmailForm>> addEmailToApp(String email) async {
+Future<List<UserSignUpCredentials>> addEmailToApp(String email) async {
   final response = await http.Client().post(
     Uri.parse('http://192.168.0.163:8000/unknown/validate_email?email=$email'),
     // Uri.parse('http://api.agnes.ooo/unknown/validate_email?email=$email'),
@@ -33,6 +33,36 @@ Future<List<UserEmailForm>> addEmailToApp(String email) async {
     // If the server did return a 200 OK response,
     // then parse the JSON.
     return compute(userEmailInfo, response.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
+
+// Send the Verification Code to Application -----------------------------------
+List<UserSignUpCredentials> checkCode(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed
+      .map<UserSignUpCredentials>(
+          (json) => UserSignUpCredentials.fromJson(json))
+      .toList();
+}
+
+Future<List<UserSignUpCredentials>> checkVerificationCode(
+    String email, String code) async {
+  final response = await http.Client().get(
+    Uri.parse(
+        'http://192.168.0.163:8000/unknown/validate_code?email=$email&code=$code'),
+    // 'http://api.agnes.ooo/unknown/validate_code?email=$email&code=$code'),
+    headers: {"Content-Type": "application/json"},
+  );
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return compute(checkCode, response.body);
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
@@ -99,27 +129,6 @@ Future<List<BookAdded>> addNewBookToShelf(String isbn) async {
   );
 
   return compute(newBookInfo, response.body);
-}
-
-// Check the Verification Code sent to email
-List<UserEmailForm> checkCode(String responseBody) {
-  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-
-  return parsed
-      .map<UserEmailForm>((json) => UserEmailForm.fromJson(json))
-      .toList();
-}
-
-Future<List<UserEmailForm>> checkVerificationCode(
-    String email, String code) async {
-  final response = await http.Client().get(
-    Uri.parse(
-        'http://192.168.0.163:8000/unknown/validate_code?email=$email&code=$code'),
-    // 'http://api.agnes.ooo/unknown/validate_code?email=$email&code=$code'),
-    headers: {"Content-Type": "application/json"},
-  );
-
-  return compute(checkCode, response.body);
 }
 
 // Add User to Application

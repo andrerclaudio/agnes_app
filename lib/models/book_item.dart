@@ -73,23 +73,22 @@ class BookAdded {
   }
 }
 
-// Send the chosen user Email to Application -----------------------------------
-
-class UserEmailForm {
+// Send the User Email or Verification Code to Application ---------------------
+class UserSignUpCredentials {
   final bool successOnRequest;
   final int errorCode;
   final String userEmail;
   final int attemptsToValidate;
 
-  const UserEmailForm({
+  const UserSignUpCredentials({
     required this.successOnRequest,
     required this.errorCode,
     required this.userEmail,
     required this.attemptsToValidate,
   });
 
-  factory UserEmailForm.fromJson(Map<String, dynamic> json) {
-    return UserEmailForm(
+  factory UserSignUpCredentials.fromJson(Map<String, dynamic> json) {
+    return UserSignUpCredentials(
       successOnRequest: json['successOnRequest'] as bool,
       errorCode: json['errorCode'] as int,
       userEmail: json['userEmail'] as String,

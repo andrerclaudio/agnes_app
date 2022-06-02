@@ -109,8 +109,8 @@ class _SendUserEmail extends StatefulWidget {
 }
 
 class _SendUserEmailState extends State<_SendUserEmail> {
-  late Future<UserEmailForm> futureData;
-  late final Future<List<UserEmailForm>> _sendEmail =
+  late Future<UserSignUpCredentials> futureData;
+  late final Future<List<UserSignUpCredentials>> _sendEmail =
       addEmailToApp(widget.email);
 
   @override
@@ -124,11 +124,11 @@ class _SendUserEmailState extends State<_SendUserEmail> {
           height: MediaQuery.of(context).padding.top,
         ),
       ),
-      body: FutureBuilder<List<UserEmailForm>>(
+      body: FutureBuilder<List<UserSignUpCredentials>>(
         future: _sendEmail,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            List<UserEmailForm> info = snapshot.data!;
+            List<UserSignUpCredentials> info = snapshot.data!;
 
             // The email was checked
             if (info[0].successOnRequest) {
@@ -165,8 +165,6 @@ class _SendUserEmailState extends State<_SendUserEmail> {
     );
   }
 }
-
-// -----------------------------------------------------------------------------
 
 class _AskUserCode extends StatefulWidget {
   const _AskUserCode({Key? key, required this.email}) : super(key: key);
@@ -215,7 +213,6 @@ class _AskUserCodeState extends State<_AskUserCode> {
                 onCompleted: (String value) {
                   setState(
                     () {
-                      Navigator.of(context).pop();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -252,14 +249,181 @@ class _SendUserCode extends StatefulWidget {
 }
 
 class _SendUserCodeState extends State<_SendUserCode> {
+  late Future<UserSignUpCredentials> futureData;
+  late final Future<List<UserSignUpCredentials>> _sendCode =
+      checkVerificationCode(widget.email, widget.code);
+
   @override
   Widget build(BuildContext context) {
-    return const SizedBox();
+    double width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: FutureBuilder<List<UserSignUpCredentials>>(
+        future: _sendCode,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<UserSignUpCredentials> info = snapshot.data!;
+
+            // The email was checked
+            if (info[0].successOnRequest) {
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.of(context).pop();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        _AskUserInformation(email: widget.email),
+                  ),
+                );
+              });
+
+              return const SizedBox();
+            } else {
+              if (info[0].errorCode == 105) {
+                // The Code is wrong Error Message
+                return const WrongValidationCodeMessage();
+              } else if (info[0].errorCode == 106) {
+                // Email already Checked Error Message
+                return const EmailAlreadyCheckedMessage();
+              }
+            }
+          } else if (snapshot.hasError) {
+            // Unknown Error Message
+            return const UnknownErrorMessage();
+          }
+
+          return Center(
+            child: SpinKitChasingDots(
+              color: const Color(Constant.objectsColor),
+              size: width * 0.3,
+              duration: const Duration(milliseconds: 1500),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
 
-class EmailAlreadyInUseMessage extends StatelessWidget {
-  const EmailAlreadyInUseMessage({Key? key}) : super(key: key);
+class _AskUserInformation extends StatefulWidget {
+  const _AskUserInformation({Key? key, required this.email}) : super(key: key);
+
+  final String email;
+
+  @override
+  State<_AskUserInformation> createState() => _AskUserInformationState();
+}
+
+class _AskUserInformationState extends State<_AskUserInformation> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    TextEditingController userPassword = TextEditingController();
+
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: SizedBox(
+        height: height,
+        width: width,
+        child: Padding(
+          padding: const EdgeInsets.all(25),
+          // the Form here
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(
+                    helperText:
+                        'Não use a mesma senha que você usa para acessar o\n'
+                        'email que foi cadastrado!',
+                    labelText: 'Digite sua senha.',
+                    icon: Icon(Icons.password),
+                  ),
+                  keyboardType: TextInputType.visiblePassword,
+                  controller: userPassword,
+                  validator: (value) {
+                    // Check if this field is empty
+                    if (value == null || value.isEmpty) {
+                      return 'O campo SENHA é necessário';
+                    }
+                    if (!RegExp(
+                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                        .hasMatch(value)) {
+                      return "A senha deve conter:\n\n"
+                          "Pelo menos 1 letra minúscula;\n"
+                          "Pelo menos 1 letra maiúscula;\n"
+                          "Pelo menos 1 número;\n"
+                          "Pelo menos 1 caracter especial;\n"
+                          "Pelo menos 8 dígitos;";
+                    }
+                    // the email is valid
+                    return null;
+                  },
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              _SendUserInformation(
+                                  email: widget.email,
+                                  password: userPassword.text),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Cadastrar a senha!'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SendUserInformation extends StatefulWidget {
+  const _SendUserInformation(
+      {Key? key, required this.email, required this.password})
+      : super(key: key);
+
+  final String email;
+  final String password;
+
+  @override
+  State<_SendUserInformation> createState() => _SendUserInformationState();
+}
+
+class _SendUserInformationState extends State<_SendUserInformation> {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+// -----------------------------------------------------------------------------
+
+class WrongValidationCodeMessage extends StatelessWidget {
+  const WrongValidationCodeMessage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -284,8 +448,9 @@ class EmailAlreadyInUseMessage extends StatelessWidget {
               ),
             ),
             const Text(
-              'Oops! O email que você está usando já está sendo utilizado.\n'
-              'Tente outro, por favor!',
+              'Oops! O código que você digitou não é o mesmo que foi enviado'
+              'para o seu email.\n'
+              'Tente novamente, por favor!',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               softWrap: true,
               overflow: TextOverflow.visible,
@@ -338,256 +503,88 @@ class UnknownErrorMessage extends StatelessWidget {
   }
 }
 
+class EmailAlreadyCheckedMessage extends StatelessWidget {
+  const EmailAlreadyCheckedMessage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: height * 0.3,
+              width: width * 0.5,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('./assets/graphics/sorry.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            const Text(
+              'Oops! O email já foi verificado.\n'
+              'Use as suas credenciais para iniciar!',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              maxLines: 4,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EmailAlreadyInUseMessage extends StatelessWidget {
+  const EmailAlreadyInUseMessage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: height * 0.3,
+              width: width * 0.5,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('./assets/graphics/sorry.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            const Text(
+              'Oops! O email que você está digitando já está sendo utilizado.\n'
+              'Tente outro, por favor!',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              softWrap: true,
+              overflow: TextOverflow.visible,
+              maxLines: 4,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 // -----------------------------------------------------------------------------
 
-// class WaitEmailValidation extends StatefulWidget {
-//   const WaitEmailValidation({Key? key, required this.email}) : super(key: key);
-//
-//   final String email;
-//
-//   @override
-//   State<WaitEmailValidation> createState() => _WaitEmailValidationState();
-// }
-//
-// class _WaitEmailValidationState extends State<WaitEmailValidation> {
-//   late Future<VerificationStep> futureData;
-//   late final Future<List<VerificationStep>> _addEmailToApp =
-//       addEmailToApp(widget.email);
-//
-//   bool _onEditing = true;
-//
-//   // late String _code;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     double width = MediaQuery.of(context).size.width;
-//     double height = MediaQuery.of(context).size.height;
-//
-//     return Scaffold(
-//       appBar: PreferredSize(
-//         preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
-//         child: SizedBox(
-//           height: MediaQuery.of(context).padding.top,
-//         ),
-//       ),
-//       body: FutureBuilder<List<VerificationStep>>(
-//         future: _addEmailToApp,
-//         builder: (context, snapshot) {
-//           if (snapshot.hasError) {
-//             return Center(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 children: [
-//                   Container(
-//                     height: height * 0.3,
-//                     width: width * 0.5,
-//                     decoration: const BoxDecoration(
-//                       image: DecorationImage(
-//                         image: AssetImage('./assets/graphics/sorry.png'),
-//                         fit: BoxFit.fill,
-//                       ),
-//                     ),
-//                   ),
-//                   const Text(
-//                     'Oops! Algo deu errado. Tente novamente.',
-//                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//                     softWrap: false,
-//                     overflow: TextOverflow.visible,
-//                   ),
-//                 ],
-//               ),
-//             );
-//           } else if (snapshot.hasData) {
-//             // TODO - Parser the response.
-//             List<VerificationStep> info = snapshot.data!;
-//             if (info[0].successOnRequest) {
-//               return Column(
-//                 children: <Widget>[
-//                   const Padding(
-//                     padding: EdgeInsets.all(20.0),
-//                     child: Center(
-//                       child: Text(
-//                         'Digite o código recebido no email cadastrado.',
-//                         overflow: TextOverflow.visible,
-//                         textAlign: TextAlign.center,
-//                         style: TextStyle(fontSize: 20.0),
-//                       ),
-//                     ),
-//                   ),
-//                   SizedBox(
-//                     width: width,
-//                     child: Center(
-//                       child: VerificationCode(
-//                         keyboardType: TextInputType.number,
-//                         underlineColor: Colors.amber,
-//                         // If this is null it will use primaryColor: Colors.red from Theme
-//                         length: 6,
-//                         isSecure: true,
-//                         fullBorder: true,
-//                         cursorColor: Colors.blue,
-//                         onCompleted: (String value) {
-//                           setState(
-//                             () {
-//                               Navigator.pushAndRemoveUntil(
-//                                 context,
-//                                 MaterialPageRoute(
-//                                   builder: (context) => WaitCodeConfirmation(
-//                                     code: value,
-//                                     email: widget.email,
-//                                   ),
-//                                 ),
-//                                 ModalRoute.withName("/"),
-//                               );
-//                             },
-//                           );
-//                         },
-//                         onEditing: (bool value) {
-//                           setState(() {
-//                             _onEditing = value;
-//                           });
-//                           if (!_onEditing) FocusScope.of(context).unfocus();
-//                         },
-//                       ),
-//                     ),
-//                   ),
-//                   // Padding(
-//                   //   padding: const EdgeInsets.all(8.0),
-//                   //   child: Center(
-//                   //     child: _onEditing
-//                   //         ? const Text('Please enter full code')
-//                   //         : Text('Your code: $_code'),
-//                   //   ),
-//                   // )
-//                 ],
-//               );
-//             } else {
-//               return Container(
-//                 height: height * 0.3,
-//                 width: width * 0.5,
-//                 decoration: const BoxDecoration(
-//                   image: DecorationImage(
-//                     image: AssetImage('./assets/graphics/sorry.png'),
-//                     fit: BoxFit.fill,
-//                   ),
-//                 ),
-//               );
-//             }
-//           } else {
-//             return const Center(
-//               child: CircularProgressIndicator(),
-//             );
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
-//
-// class WaitCodeConfirmation extends StatefulWidget {
-//   const WaitCodeConfirmation({Key? key, this.code, required this.email})
-//       : super(key: key);
-//
-//   final String? code;
-//   final String email;
-//
-//   @override
-//   State<WaitCodeConfirmation> createState() => _WaitCodeConfirmationState();
-// }
-//
-// class _WaitCodeConfirmationState extends State<WaitCodeConfirmation> {
-//   late Future<VerificationStep> futureData;
-//   late final Future<List<VerificationStep>> _checkVerificationCode =
-//       checkVerificationCode(widget.email, widget.code as String);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     double width = MediaQuery.of(context).size.width;
-//     double height = MediaQuery.of(context).size.height;
-//
-//     return Scaffold(
-//       appBar: PreferredSize(
-//         preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
-//         child: SizedBox(
-//           height: MediaQuery.of(context).padding.top,
-//         ),
-//       ),
-//       body: FutureBuilder<List<VerificationStep>>(
-//         future: _checkVerificationCode,
-//         builder: (context, snapshot) {
-//           if (snapshot.hasError) {
-//             return Center(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 children: [
-//                   Container(
-//                     height: height * 0.3,
-//                     width: width * 0.5,
-//                     decoration: const BoxDecoration(
-//                       image: DecorationImage(
-//                         image: AssetImage('./assets/graphics/sorry.png'),
-//                         fit: BoxFit.fill,
-//                       ),
-//                     ),
-//                   ),
-//                   const Text(
-//                     'Oops! Algo deu errado. Tente novamente.',
-//                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//                     softWrap: false,
-//                     overflow: TextOverflow.visible,
-//                   ),
-//                 ],
-//               ),
-//             );
-//           } else if (snapshot.hasData) {
-//             // TODO - Parser the response.
-//             List<VerificationStep> info = snapshot.data!;
-//             if (info[0].successOnRequest) {
-//               Future.delayed(const Duration(seconds: 2), () {
-//                 Navigator.of(context).push(
-//                   MaterialPageRoute(
-//                     builder: (BuildContext context) =>
-//                         NewUserForm(email: widget.email),
-//                   ),
-//                 );
-//               });
-//
-//               return AlertDialog(
-//                 backgroundColor: Colors.blueGrey[100],
-//                 title: const Text('O email foi verificado!'),
-//                 // content: SingleChildScrollView(
-//                 //   child: ListBody(
-//                 //     children: const <Widget>[
-//                 //       Text('A leitura foi iniciada.'),
-//                 //       Text('Você verá o livro na aba "Lendo".'),
-//                 //     ],
-//                 //   ),
-//                 // ),
-//               );
-//             } else {
-//               return Container(
-//                 height: height * 0.3,
-//                 width: width * 0.5,
-//                 decoration: const BoxDecoration(
-//                   image: DecorationImage(
-//                     image: AssetImage('./assets/graphics/sorry.png'),
-//                     fit: BoxFit.fill,
-//                   ),
-//                 ),
-//               );
-//             }
-//           } else {
-//             return const Center(
-//               child: CircularProgressIndicator(),
-//             );
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
-//
 // class NewUserForm extends StatefulWidget {
 //   const NewUserForm({Key? key, required this.email}) : super(key: key);
 //
