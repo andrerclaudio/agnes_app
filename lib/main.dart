@@ -5,11 +5,9 @@ Root file for Agnes application.
 // Application
 import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/views/login_view.dart';
-
 // Local
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 // Added
 import 'package:google_fonts/google_fonts.dart';
 
@@ -36,7 +34,7 @@ class AgnesApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginPage(title: 'Agnes'),
-        '/home': (context) => const HomePage(),
+        '/home': (context) => const HomePage(email: 'null', password: 'null'),
       },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

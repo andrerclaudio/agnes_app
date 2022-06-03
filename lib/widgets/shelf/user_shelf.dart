@@ -6,7 +6,12 @@ import 'package:agnes_app/models/book_item.dart';
 import 'package:flutter/material.dart';
 
 class UserReadingScreen extends StatefulWidget {
-  const UserReadingScreen({Key? key}) : super(key: key);
+  const UserReadingScreen(
+      {Key? key, required this.email, required this.password})
+      : super(key: key);
+
+  final String email;
+  final String password;
 
   @override
   UserReadingScreenState createState() => UserReadingScreenState();
@@ -15,7 +20,7 @@ class UserReadingScreen extends StatefulWidget {
 class UserReadingScreenState extends State<UserReadingScreen> {
   late Future<BookListStatus> futureData;
   late final Future<List<BookListStatus>> _fetchBookListStatus =
-      fetchBookListStatus();
+      fetchBookListStatus(widget.email, widget.password);
 
   @override
   Widget build(BuildContext context) {

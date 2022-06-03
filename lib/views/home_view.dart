@@ -6,7 +6,11 @@ import 'package:agnes_app/widgets/shelf/user_shelf.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key, required this.email, required this.password})
+      : super(key: key);
+
+  final String email;
+  final String password;
 
   @override
   HomePageState createState() => HomePageState();
@@ -15,15 +19,16 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   int _selectedIndex = Constant.initialIndex;
 
-  final List<Widget> _widgetOptions = <Widget>[
-    const UserReadingScreen(),
+  late final List<Widget> _widgetOptions = <Widget>[
+    UserReadingScreen(email: widget.email, password: widget.password),
+    UserReadingScreen(email: widget.email, password: widget.password),
   ];
 
   void _addNewBook() {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return const AddNewBook();
+          return AddNewBook(email: widget.email, password: widget.password);
         },
       ),
     );
@@ -54,15 +59,20 @@ class HomePageState extends State<HomePage> {
             icon: Icon(Icons.menu_book_sharp),
             label: 'Lendo',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.menu_book_sharp),
+            label: 'Lendo',
+          ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color(Constant.objectsColorAmber),
+        selectedItemColor: const Color(Constant.objectsColor),
         onTap: _onItemTapped,
       ),
       floatingActionButton: AnimatedOpacity(
         opacity: false ? 0.0 : 0.8,
         duration: const Duration(milliseconds: 1000),
         child: FloatingActionButton.extended(
+          backgroundColor: const Color(Constant.objectsColor),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15.0),
           ),

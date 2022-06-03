@@ -2,12 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
+import 'package:agnes_app/views/home_view.dart';
 import 'package:flutter/material.dart';
 
 class AddNewBook extends StatefulWidget {
-  const AddNewBook({Key? key}) : super(key: key);
+  const AddNewBook({Key? key, required this.email, required this.password})
+      : super(key: key);
+
+  final String email;
+  final String password;
 
   @override
   State<AddNewBook> createState() => _AddNewBookState();
@@ -23,13 +29,17 @@ class _AddNewBookState extends State<AddNewBook> {
           height: MediaQuery.of(context).padding.top,
         ),
       ),
-      body: const _AskIsbnCode(),
+      body: _AskIsbnCode(email: widget.email, password: widget.password),
     );
   }
 }
 
 class _AskIsbnCode extends StatefulWidget {
-  const _AskIsbnCode({Key? key}) : super(key: key);
+  const _AskIsbnCode({Key? key, required this.email, required this.password})
+      : super(key: key);
+
+  final String email;
+  final String password;
 
   @override
   _AskIsbnCodeState createState() => _AskIsbnCodeState();
@@ -82,19 +92,30 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
                     child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            const Color(Constant.objectsColor)),
+                      ),
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (BuildContext context) => FetchBookInfo(
+                                email: widget.email,
+                                password: widget.password,
                                 isbn: isbnCode.text,
                               ),
                             ),
                           );
                         }
                       },
-                      child: const Text('Procurar ...'),
+                      child: const Text(
+                        'Procurar ...',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -108,7 +129,15 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
 }
 
 class FetchBookInfo extends StatefulWidget {
-  const FetchBookInfo({Key? key, required this.isbn}) : super(key: key);
+  const FetchBookInfo(
+      {Key? key,
+      required this.email,
+      required this.password,
+      required this.isbn})
+      : super(key: key);
+
+  final String email;
+  final String password;
   final String isbn;
 
   @override
@@ -118,7 +147,7 @@ class FetchBookInfo extends StatefulWidget {
 class FetchBookInfoState extends State<FetchBookInfo> {
   late Future<BookInfoByISBN> futureData;
   late final Future<List<BookInfoByISBN>> _fetchBookByIsbn =
-      fetchBookInfoByIsbn(widget.isbn);
+      fetchBookInfoByIsbn(widget.email, widget.password, widget.isbn);
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +190,10 @@ class FetchBookInfoState extends State<FetchBookInfo> {
               ),
             );
           } else if (snapshot.hasData) {
-            return BookInfoByIsbn(data: snapshot.data!);
+            return BookInfoByIsbn(
+                email: widget.email,
+                password: widget.password,
+                data: snapshot.data!);
           } else {
             return const Center(
               child: CircularProgressIndicator(),
@@ -173,18 +205,30 @@ class FetchBookInfoState extends State<FetchBookInfo> {
   }
 }
 
-class BookInfoByIsbn extends StatelessWidget {
-  const BookInfoByIsbn({Key? key, required this.data}) : super(key: key);
+class BookInfoByIsbn extends StatefulWidget {
+  const BookInfoByIsbn(
+      {Key? key,
+      required this.email,
+      required this.password,
+      required this.data})
+      : super(key: key);
 
+  final String email;
+  final String password;
   final List<BookInfoByISBN> data;
 
+  @override
+  State<BookInfoByIsbn> createState() => _BookInfoByIsbnState();
+}
+
+class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    if (data[0].successOnRequest) {
-      final Map bookInfo = data[0].bookInfo;
+    if (widget.data[0].successOnRequest) {
+      final Map bookInfo = widget.data[0].bookInfo;
       final String coverPic = bookInfo['coverPic'];
       final String title = bookInfo['title'];
       final String author = bookInfo['author'];
@@ -332,13 +376,21 @@ class BookInfoByIsbn extends StatelessWidget {
                 children: [
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      primary: const Color(Constant.objectsColor),
                       minimumSize: Size(height * 0.2, 50),
                       maximumSize: Size(height * 0.2, 50),
                     ),
-                    child: const Text('Iniciar leitura'),
+                    child: const Text(
+                      'Iniciar leitura',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (BuildContext context) => AddNewBookToShelf(
+                          email: widget.email,
+                          password: widget.password,
                           isbn: isbn,
                         ),
                       ),
@@ -346,10 +398,16 @@ class BookInfoByIsbn extends StatelessWidget {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      primary: const Color(Constant.objectsColor),
                       minimumSize: Size(height * 0.2, 50),
                       maximumSize: Size(height * 0.2, 50),
                     ),
-                    child: const Text('Voltar'),
+                    child: const Text(
+                      'Voltar',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     onPressed: () => Navigator.pop(context, false),
                   ),
                 ],
@@ -381,7 +439,15 @@ class BookInfoByIsbn extends StatelessWidget {
 }
 
 class AddNewBookToShelf extends StatefulWidget {
-  const AddNewBookToShelf({Key? key, required this.isbn}) : super(key: key);
+  const AddNewBookToShelf(
+      {Key? key,
+      required this.email,
+      required this.password,
+      required this.isbn})
+      : super(key: key);
+
+  final String email;
+  final String password;
   final String isbn;
 
   @override
@@ -391,7 +457,7 @@ class AddNewBookToShelf extends StatefulWidget {
 class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
   late Future<BookAdded> futureData;
   late final Future<List<BookAdded>> _addNewBookToShelf =
-      addNewBookToShelf(widget.isbn);
+      addNewBookToShelf(widget.email, widget.password, widget.isbn);
 
   @override
   Widget build(BuildContext context) {
@@ -438,8 +504,12 @@ class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
             List<BookAdded> info = snapshot.data!;
             if (info[0].successOnRequest) {
               Future.delayed(const Duration(seconds: 3), () {
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/home', (route) => false);
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => HomePage(
+                        email: widget.email, password: widget.password),
+                  ),
+                );
               });
 
               return AlertDialog(

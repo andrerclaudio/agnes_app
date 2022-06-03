@@ -41,7 +41,7 @@ Future<List<UserSignUpCredentials>> addEmailToApp(String email) async {
 }
 
 // Send the Verification Code to Application -----------------------------------
-List<UserSignUpCredentials> checkCode(String responseBody) {
+List<UserSignUpCredentials> userCodeInfo(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed
@@ -62,7 +62,35 @@ Future<List<UserSignUpCredentials>> checkVerificationCode(
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    return compute(checkCode, response.body);
+    return compute(userCodeInfo, response.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
+
+// Add User to Application -----------------------------------------------------
+List<CreateUserForm> createUser(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed
+      .map<CreateUserForm>((json) => CreateUserForm.fromJson(json))
+      .toList();
+}
+
+Future<List<CreateUserForm>> addUserToApp(String email, String password) async {
+  final response = await http.Client().post(
+    Uri.parse(
+        'http://192.168.0.163:8000/unknown/create_user?email=$email&password=$password'),
+    // Uri.parse('http://api.agnes.ooo/unknown/create_user?email=$email'),
+    headers: {"Content-Type": "application/json"},
+  );
+
+  if (response.statusCode == 201) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return compute(createUser, response.body);
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
@@ -81,11 +109,16 @@ List<BookListStatus> parseBookListStatus(String responseBody) {
       .toList();
 }
 
-Future<List<BookListStatus>> fetchBookListStatus() async {
-  const String token = '';
+Future<List<BookListStatus>> fetchBookListStatus(
+    String email, String password) async {
+  var temp = base64Encode('$email:$password'.codeUnits);
+
   final response = await http.Client().get(
     Uri.parse(Constant.apiReadingScreenURL),
-    headers: {"Content-Type": "application/json"},
+    headers: {
+      "Content-Type": "application/json",
+      "authorization": 'Basic $temp'
+    },
   );
 
   return compute(parseBookListStatus, response.body);
@@ -100,13 +133,18 @@ List<BookInfoByISBN> parseBookInfoByIsbn(String responseBody) {
       .toList();
 }
 
-Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(String isbn) async {
-  const String token = '';
+Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(
+    String email, String password, String isbn) async {
+  var temp = base64Encode('$email:$password'.codeUnits);
+
   final response = await http.Client().get(
     Uri.parse(
         'http://192.168.0.163:8000/library/fetch_book_information?isbnCode=$isbn'),
     // 'http://api.agnes.ooo/library/fetch_book_information?isbnCode=$isbn'),
-    headers: {"Content-Type": "application/json"},
+    headers: {
+      "Content-Type": "application/json",
+      "authorization": 'Basic $temp'
+    },
   );
 
   return compute(parseBookInfoByIsbn, response.body);
@@ -119,32 +157,19 @@ List<BookAdded> newBookInfo(String responseBody) {
   return parsed.map<BookAdded>((json) => BookAdded.fromJson(json)).toList();
 }
 
-Future<List<BookAdded>> addNewBookToShelf(String isbn) async {
-  const String token = '';
+Future<List<BookAdded>> addNewBookToShelf(
+    String email, String password, String isbn) async {
+  var temp = base64Encode('$email:$password'.codeUnits);
+
   final response = await http.Client().post(
     Uri.parse(
         'http://192.168.0.163:8000/user/shelf/add_new_book?isbnCode=$isbn'),
     // 'http://api.agnes.ooo/user/shelf/add_new_book?isbnCode=$isbn'),
-    headers: {"Content-Type": "application/json"},
+    headers: {
+      "Content-Type": "application/json",
+      "authorization": 'Basic $temp'
+    },
   );
 
   return compute(newBookInfo, response.body);
-}
-
-// Add User to Application
-List<CreateUser> newUserInfo(String responseBody) {
-  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
-
-  return parsed.map<CreateUser>((json) => CreateUser.fromJson(json)).toList();
-}
-
-Future<List<CreateUser>> addUserToApp(String email, String password) async {
-  final response = await http.Client().post(
-    Uri.parse(
-        'http://192.168.0.163:8000/unknown/create_user?email=$email&password=$password'),
-    // Uri.parse('http://api.agnes.ooo/unknown/create_user?email=$email'),
-    headers: {"Content-Type": "application/json"},
-  );
-
-  return compute(newUserInfo, response.body);
 }

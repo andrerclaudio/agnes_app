@@ -1,6 +1,7 @@
 // Local
 // Application
 import 'package:agnes_app/generic/constant.dart';
+import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/widgets/login/sign_up_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -100,8 +101,13 @@ class _LoginPageState extends State<LoginPage> {
                     style: Constant.signInTextStyle,
                   ),
                   onPressed: () {
-                    Navigator.of(context)
-                        .pushNamedAndRemoveUntil('/home', (route) => false);
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => HomePage(
+                            email: emailController.text,
+                            password: passwordController.text),
+                      ),
+                    );
                   },
                 ),
               ),

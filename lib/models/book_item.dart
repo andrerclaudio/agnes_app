@@ -73,7 +73,7 @@ class BookAdded {
   }
 }
 
-// Send the User Email or Verification Code to Application ---------------------
+// Send User Email or Verification Code to Application ---------------------
 class UserSignUpCredentials {
   final bool successOnRequest;
   final int errorCode;
@@ -97,23 +97,22 @@ class UserSignUpCredentials {
   }
 }
 
-// -----------------------------------------------------------------------------
-
-class CreateUser {
+// Send User Information to Application ----------------------------------------
+class CreateUserForm {
   final bool successOnRequest;
   final int errorCode;
   final String userId;
   final int lastAccess;
 
-  const CreateUser({
+  const CreateUserForm({
     required this.successOnRequest,
     required this.errorCode,
     required this.userId,
     required this.lastAccess,
   });
 
-  factory CreateUser.fromJson(Map<String, dynamic> json) {
-    return CreateUser(
+  factory CreateUserForm.fromJson(Map<String, dynamic> json) {
+    return CreateUserForm(
       successOnRequest: json['successOnRequest'] as bool,
       errorCode: json['errorCode'] as int,
       userId: json['userId'] as String,
