@@ -1,13 +1,21 @@
+/*
+
+User Shelf related methods.
+
+ */
+
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
+import 'package:agnes_app/widgets/errors_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class UserReadingScreen extends StatefulWidget {
-  const UserReadingScreen(
-      {Key? key, required this.email, required this.password})
+  const UserReadingScreen({Key? key, required this.email, required this.password})
       : super(key: key);
 
   final String email;
@@ -18,50 +26,32 @@ class UserReadingScreen extends StatefulWidget {
 }
 
 class UserReadingScreenState extends State<UserReadingScreen> {
-  late Future<BookListStatus> futureData;
-  late final Future<List<BookListStatus>> _fetchBookListStatus =
-      fetchBookListStatus(widget.email, widget.password);
+  late Future<UserShelfBooks> futureData;
+  late final Future<List<UserShelfBooks>> _fetchBookList =
+      fetchBookList(widget.email, widget.password);
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return FutureBuilder<List<BookListStatus>>(
-      future: _fetchBookListStatus,
+    return FutureBuilder<List<UserShelfBooks>>(
+      future: _fetchBookList,
       builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  height: height * 0.3,
-                  width: width * 0.5,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('./assets/graphics/sorry.png'),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-                const Text(
-                  'Oops! Algo deu errado. Tente novamente.',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                  softWrap: false,
-                  overflow: TextOverflow.visible,
-                ),
-              ],
-            ),
-          );
-        } else if (snapshot.hasData) {
+        if (snapshot.hasData) {
           return BooksList(data: snapshot.data!);
-        } else {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+        } else if (snapshot.hasError) {
+          // Unknown Error Message
+          return const UnknownErrorMessage();
         }
+
+        return Center(
+          child: SpinKitChasingDots(
+            color: const Color(Constant.objectsColor),
+            size: width * 0.3,
+            duration: const Duration(milliseconds: 1500),
+          ),
+        );
       },
     );
   }
@@ -70,7 +60,7 @@ class UserReadingScreenState extends State<UserReadingScreen> {
 class BooksList extends StatelessWidget {
   const BooksList({Key? key, required this.data}) : super(key: key);
 
-  final List<BookListStatus> data;
+  final List<UserShelfBooks> data;
 
   @override
   Widget build(BuildContext context) {
@@ -222,23 +212,7 @@ class BooksList extends StatelessWidget {
         ),
       );
     } else {
-      return SizedBox(
-        height: height,
-        width: width,
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Container(
-            height: height * 0.3,
-            width: width * 0.5,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('./assets/graphics/no_books.png'),
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-          ),
-        ),
-      );
+      return const NoActiveOrPausedReadingFoundMessage();
     }
   }
 }

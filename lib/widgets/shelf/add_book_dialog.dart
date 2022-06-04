@@ -1,3 +1,9 @@
+/*
+
+Add book to User Shelf methods.
+
+ */
+
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -6,7 +12,9 @@ import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:agnes_app/views/home_view.dart';
+import 'package:agnes_app/widgets/errors_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AddNewBook extends StatefulWidget {
   const AddNewBook({Key? key, required this.email, required this.password})
@@ -76,7 +84,7 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
                     decoration: const InputDecoration(
                       icon: Icon(Icons.format_size_sharp),
                       helperText:
-                          'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
+                      'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
                       helperMaxLines: 4,
                       labelText: 'Digite o código ISBN',
                     ),
@@ -129,11 +137,10 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
 }
 
 class FetchBookInfo extends StatefulWidget {
-  const FetchBookInfo(
-      {Key? key,
-      required this.email,
-      required this.password,
-      required this.isbn})
+  const FetchBookInfo({Key? key,
+    required this.email,
+    required this.password,
+    required this.isbn})
       : super(key: key);
 
   final String email;
@@ -145,14 +152,13 @@ class FetchBookInfo extends StatefulWidget {
 }
 
 class FetchBookInfoState extends State<FetchBookInfo> {
-  late Future<BookInfoByISBN> futureData;
-  late final Future<List<BookInfoByISBN>> _fetchBookByIsbn =
+  late Future<BookInformation> futureData;
+  late final Future<List<BookInformation>> _fetchBookByIsbn =
       fetchBookInfoByIsbn(widget.email, widget.password, widget.isbn);
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -161,46 +167,25 @@ class FetchBookInfoState extends State<FetchBookInfo> {
           height: MediaQuery.of(context).padding.top,
         ),
       ),
-      body: FutureBuilder<List<BookInfoByISBN>>(
-        future: _fetchBookByIsbn,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
+      body: FutureBuilder<List<BookInformation>>(
+          future: _fetchBookByIsbn,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return BookInfoByIsbn(
+                  email: widget.email,
+                  password: widget.password,
+                  data: snapshot.data!);
+            } else if (snapshot.hasError) {
+              return const UnknownErrorMessage();
+            }
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: height * 0.3,
-                    width: width * 0.5,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('./assets/graphics/sorry.png'),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    'Ooops! Algo deu errado. Tente novamente.',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    softWrap: false,
-                    overflow: TextOverflow.visible,
-                  ),
-                ],
+              child: SpinKitChasingDots(
+                color: const Color(Constant.objectsColor),
+                size: width * 0.3,
+                duration: const Duration(milliseconds: 1500),
               ),
             );
-          } else if (snapshot.hasData) {
-            return BookInfoByIsbn(
-                email: widget.email,
-                password: widget.password,
-                data: snapshot.data!);
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
+          }),
     );
   }
 }
@@ -215,7 +200,7 @@ class BookInfoByIsbn extends StatefulWidget {
 
   final String email;
   final String password;
-  final List<BookInfoByISBN> data;
+  final List<BookInformation> data;
 
   @override
   State<BookInfoByIsbn> createState() => _BookInfoByIsbnState();
@@ -417,33 +402,16 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
         ),
       );
     } else {
-      return SizedBox(
-        height: height,
-        width: width,
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Container(
-            height: height * 0.3,
-            width: width * 0.5,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('./assets/graphics/question.png'),
-                fit: BoxFit.fitWidth,
-              ),
-            ),
-          ),
-        ),
-      );
+      return const NoBookFoundByIsbnMessage();
     }
   }
 }
 
 class AddNewBookToShelf extends StatefulWidget {
-  const AddNewBookToShelf(
-      {Key? key,
-      required this.email,
-      required this.password,
-      required this.isbn})
+  const AddNewBookToShelf({Key? key,
+    required this.email,
+    required this.password,
+    required this.isbn})
       : super(key: key);
 
   final String email;
@@ -457,12 +425,11 @@ class AddNewBookToShelf extends StatefulWidget {
 class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
   late Future<BookAdded> futureData;
   late final Future<List<BookAdded>> _addNewBookToShelf =
-      addNewBookToShelf(widget.email, widget.password, widget.isbn);
+  addNewBookToShelf(widget.email, widget.password, widget.isbn);
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: PreferredSize(
@@ -472,77 +439,55 @@ class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
         ),
       ),
       body: FutureBuilder<List<BookAdded>>(
-        future: _addNewBookToShelf,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    height: height * 0.3,
-                    width: width * 0.5,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('./assets/graphics/sorry.png'),
-                        fit: BoxFit.fill,
-                      ),
+          future: _addNewBookToShelf,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<BookAdded> info = snapshot.data!;
+
+              if (info[0].successOnRequest) {
+                Future.delayed(const Duration(seconds: 3), () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => HomePage(
+                          email: widget.email, password: widget.password),
+                    ),
+                  );
+                });
+
+                return AlertDialog(
+                  backgroundColor: const Color(Constant.objectsColor),
+                  title: const Text('Você adicionou o livro a sua estante!'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: const <Widget>[
+                        Text('A leitura foi iniciada.'),
+                        Text('Você verá o livro na aba "Lendo".'),
+                      ],
                     ),
                   ),
-                  const Text(
-                    'Oops! Algo deu errado. Tente novamente.',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    softWrap: false,
-                    overflow: TextOverflow.visible,
-                  ),
-                ],
+                );
+              } else {
+                if (info[0].errorCode ==
+                    ErrorsConstants.noBookWasFoundWithTheGivenIsbnCode) {
+                  return const NoBookFoundByIsbnMessage();
+                } else if (info[0].errorCode ==
+                    ErrorsConstants.emailAlreadyChecked) {
+                  return const BookAlreadyAddedToShelfMessage();
+                }
+              }
+            } else if (snapshot.hasError) {
+              return const UnknownErrorMessage();
+            }
+
+            return Center(
+              child: SpinKitChasingDots(
+                color: const Color(Constant.objectsColor),
+                size: width * 0.3,
+                duration: const Duration(milliseconds: 1500),
               ),
             );
-          } else if (snapshot.hasData) {
-            // TODO - Parser the response.
-            List<BookAdded> info = snapshot.data!;
-            if (info[0].successOnRequest) {
-              Future.delayed(const Duration(seconds: 3), () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => HomePage(
-                        email: widget.email, password: widget.password),
-                  ),
-                );
-              });
-
-              return AlertDialog(
-                backgroundColor: Colors.blueGrey[100],
-                title: const Text('Você adicionou o livro a sua estante!'),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children: const <Widget>[
-                      Text('A leitura foi iniciada.'),
-                      Text('Você verá o livro na aba "Lendo".'),
-                    ],
-                  ),
-                ),
-              );
-            } else {
-              return Container(
-                height: height * 0.3,
-                width: width * 0.5,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('./assets/graphics/sorry.png'),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              );
-            }
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
+          }),
     );
   }
 }

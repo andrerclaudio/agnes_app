@@ -1,8 +1,13 @@
-// Local
-// Application
+/*
+
+Sign Up related methods.
+
+ */
+
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
+import 'package:agnes_app/widgets/errors_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
@@ -286,11 +291,10 @@ class _SendUserCodeState extends State<_SendUserCode> {
 
               return const SizedBox();
             } else {
-              if (info[0].errorCode == 105) {
-                // The Code is wrong Error Message
+              if (info[0].errorCode == ErrorsConstants.wrongValidationCode) {
                 return const WrongValidationCodeMessage();
-              } else if (info[0].errorCode == 106) {
-                // Email already Checked Error Message
+              } else if (info[0].errorCode ==
+                  ErrorsConstants.emailAlreadyChecked) {
                 return const EmailAlreadyCheckedMessage();
               }
             }
@@ -459,169 +463,6 @@ class _SendUserInformationState extends State<_SendUserInformation> {
             ),
           );
         },
-      ),
-    );
-  }
-}
-
-// -----------------------------------------------------------------------------
-
-class WrongValidationCodeMessage extends StatelessWidget {
-  const WrongValidationCodeMessage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: height * 0.3,
-              width: width * 0.5,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('./assets/graphics/sorry.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            const Text(
-              'Oops! O código que você digitou não é o mesmo que foi enviado'
-              'para o seu email.\n'
-              'Tente novamente, por favor!',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              softWrap: true,
-              overflow: TextOverflow.visible,
-              maxLines: 4,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class UnknownErrorMessage extends StatelessWidget {
-  const UnknownErrorMessage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: height * 0.3,
-              width: width * 0.5,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('./assets/graphics/sorry.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            const Text(
-              'Oops! Alguma coisa inesperada aconteceu.\n'
-              'Tente novamente, por favor!',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              softWrap: true,
-              overflow: TextOverflow.visible,
-              maxLines: 4,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class EmailAlreadyCheckedMessage extends StatelessWidget {
-  const EmailAlreadyCheckedMessage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: height * 0.3,
-              width: width * 0.5,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('./assets/graphics/sorry.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            const Text(
-              'Oops! O email já foi verificado.\n'
-              'Use as suas credenciais para iniciar!',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              softWrap: true,
-              overflow: TextOverflow.visible,
-              maxLines: 4,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class EmailAlreadyInUseMessage extends StatelessWidget {
-  const EmailAlreadyInUseMessage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: height * 0.3,
-              width: width * 0.5,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('./assets/graphics/sorry.png'),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            const Text(
-              'Oops! O email que você está digitando já está sendo utilizado.\n'
-              'Tente outro, por favor!',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              softWrap: true,
-              overflow: TextOverflow.visible,
-              maxLines: 4,
-            ),
-          ],
-        ),
       ),
     );
   }

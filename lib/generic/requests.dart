@@ -30,13 +30,13 @@ Future<List<UserSignUpCredentials>> addEmailToApp(String email) async {
   );
 
   if ((response.statusCode == 200) || (response.statusCode == 201)) {
-    // If the server did return a 200 OK response,
+    // If the server did return a 200 OK response or 201 Post response,
     // then parse the JSON.
     return compute(userEmailInfo, response.body);
   } else {
-    // If the server did not return a 200 OK response,
+    // If the server did not return a 200 or 201 response,
     // then throw an exception.
-    throw Exception('Failed to load album');
+    throw Exception('Failed to fetch or add the information');
   }
 }
 
@@ -66,7 +66,7 @@ Future<List<UserSignUpCredentials>> checkVerificationCode(
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
-    throw Exception('Failed to load album');
+    throw Exception('Failed to fetch the information');
   }
 }
 
@@ -88,54 +88,60 @@ Future<List<CreateUserForm>> addUserToApp(String email, String password) async {
   );
 
   if (response.statusCode == 201) {
-    // If the server did return a 200 OK response,
+    // If the server did return a 201 Post response,
     // then parse the JSON.
     return compute(createUser, response.body);
   } else {
-    // If the server did not return a 200 OK response,
+    // If the server did not return a 201 Post response,
     // then throw an exception.
-    throw Exception('Failed to load album');
+    throw Exception('Failed to create the User');
   }
 }
 
-// -----------------------------------------------------------------------------
-
-// Reading screen class
-List<BookListStatus> parseBookListStatus(String responseBody) {
+// Fetch Books on the User Shelf -----------------------------------------------
+List<UserShelfBooks> parseBookList(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed
-      .map<BookListStatus>((json) => BookListStatus.fromJson(json))
+      .map<UserShelfBooks>((json) => UserShelfBooks.fromJson(json))
       .toList();
 }
 
-Future<List<BookListStatus>> fetchBookListStatus(
+Future<List<UserShelfBooks>> fetchBookList(
     String email, String password) async {
-  var temp = base64Encode('$email:$password'.codeUnits);
+  var basicAuth = base64Encode('$email:$password'.codeUnits);
 
   final response = await http.Client().get(
     Uri.parse(Constant.apiReadingScreenURL),
     headers: {
       "Content-Type": "application/json",
-      "authorization": 'Basic $temp'
+      "authorization": 'Basic $basicAuth'
     },
   );
 
-  return compute(parseBookListStatus, response.body);
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return compute(parseBookList, response.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to fetch the information');
+  }
 }
 
-// Fetch Book Info by ISBN code class
-List<BookInfoByISBN> parseBookInfoByIsbn(String responseBody) {
+// Fetch Book Info by ISBN code ------------------------------------------------
+List<BookInformation> parseBookInformation(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed
-      .map<BookInfoByISBN>((json) => BookInfoByISBN.fromJson(json))
+      .map<BookInformation>((json) => BookInformation.fromJson(json))
       .toList();
 }
 
-Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(
+Future<List<BookInformation>> fetchBookInfoByIsbn(
     String email, String password, String isbn) async {
-  var temp = base64Encode('$email:$password'.codeUnits);
+  var basicAuth = base64Encode('$email:$password'.codeUnits);
 
   final response = await http.Client().get(
     Uri.parse(
@@ -143,15 +149,23 @@ Future<List<BookInfoByISBN>> fetchBookInfoByIsbn(
     // 'http://api.agnes.ooo/library/fetch_book_information?isbnCode=$isbn'),
     headers: {
       "Content-Type": "application/json",
-      "authorization": 'Basic $temp'
+      "authorization": 'Basic $basicAuth'
     },
   );
 
-  return compute(parseBookInfoByIsbn, response.body);
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return compute(parseBookInformation, response.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to fetch the information');
+  }
 }
 
-// Add Book by ISBN code class
-List<BookAdded> newBookInfo(String responseBody) {
+// Add Book to Shelf by ISBN code ----------------------------------------------
+List<BookAdded> addBookToShelf(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
   return parsed.map<BookAdded>((json) => BookAdded.fromJson(json)).toList();
@@ -159,7 +173,7 @@ List<BookAdded> newBookInfo(String responseBody) {
 
 Future<List<BookAdded>> addNewBookToShelf(
     String email, String password, String isbn) async {
-  var temp = base64Encode('$email:$password'.codeUnits);
+  var basicAuth = base64Encode('$email:$password'.codeUnits);
 
   final response = await http.Client().post(
     Uri.parse(
@@ -167,9 +181,17 @@ Future<List<BookAdded>> addNewBookToShelf(
     // 'http://api.agnes.ooo/user/shelf/add_new_book?isbnCode=$isbn'),
     headers: {
       "Content-Type": "application/json",
-      "authorization": 'Basic $temp'
+      "authorization": 'Basic $basicAuth'
     },
   );
 
-  return compute(newBookInfo, response.body);
+  if ((response.statusCode == 200) || (response.statusCode == 201)) {
+    // If the server did return a 200 OK or 201 Post response,
+    // then parse the JSON.
+    return compute(addBookToShelf, response.body);
+  } else {
+    // If the server did not return a 200 OK or 201 Post response,
+    // then throw an exception.
+    throw Exception('Failed to add the book to shelf');
+  }
 }
