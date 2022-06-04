@@ -12,7 +12,6 @@ import 'dart:convert';
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:flutter/foundation.dart';
-
 // Added
 import 'package:http/http.dart' as http;
 
@@ -130,6 +129,9 @@ Future<List<UserShelfBooks>> fetchBookList(
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
+    if (response.statusCode == 401) {
+      throw ArgumentError.value('Unauthorized access');
+    }
     throw Exception('Failed to fetch the information');
   }
 }
@@ -164,6 +166,9 @@ Future<List<BookInformation>> fetchBookInfoByIsbn(
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
+    if (response.statusCode == 401) {
+      throw ArgumentError.value('Unauthorized access');
+    }
     throw Exception('Failed to fetch the information');
   }
 }
@@ -196,6 +201,9 @@ Future<List<BookAdded>> addNewBookToShelf(
   } else {
     // If the server did not return a 200 OK or 201 Post response,
     // then throw an exception.
+    if (response.statusCode == 401) {
+      throw ArgumentError.value('Unauthorized access');
+    }
     throw Exception('Failed to add the book to shelf');
   }
 }

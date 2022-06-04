@@ -8,11 +8,10 @@ Sign Up related methods.
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
+import 'package:agnes_app/views/login_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
-
 // Local
 import 'package:flutter/material.dart';
-
 // Added
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
@@ -159,6 +158,19 @@ class _SendUserEmailState extends State<_SendUserEmail> {
               return const EmailAlreadyInUseMessage();
             }
           } else if (snapshot.hasError) {
+            if ('${snapshot.error}' ==
+                'Invalid argument: "Unauthorized access"') {
+              Future.delayed(const Duration(seconds: 2), () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginPage(title: 'Agnes'),
+                  ),
+                );
+              });
+
+              return const UnauthorizedAccessMessage();
+            }
             // Unknown Error Message
             return const UnknownErrorMessage();
           }
@@ -304,6 +316,19 @@ class _SendUserCodeState extends State<_SendUserCode> {
               }
             }
           } else if (snapshot.hasError) {
+            if ('${snapshot.error}' ==
+                'Invalid argument: "Unauthorized access"') {
+              Future.delayed(const Duration(seconds: 2), () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginPage(title: 'Agnes'),
+                  ),
+                );
+              });
+
+              return const UnauthorizedAccessMessage();
+            }
             // Unknown Error Message
             return const UnknownErrorMessage();
           }
@@ -372,15 +397,18 @@ class _AskUserInformationState extends State<_AskUserInformation> {
                     if (value == null || value.isEmpty) {
                       return 'O campo SENHA é necessário';
                     }
-                    if (!RegExp(
-                            r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                        .hasMatch(value)) {
-                      return "A senha deve conter:\n\n"
-                          "Pelo menos 1 letra minúscula;\n"
-                          "Pelo menos 1 letra maiúscula;\n"
-                          "Pelo menos 1 número;\n"
-                          "Pelo menos 1 caracter especial;\n"
-                          "Pelo menos 8 dígitos;";
+                    // if (!RegExp(
+                    //         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                    //     .hasMatch(value)) {
+                    //   return "A senha deve conter:\n\n"
+                    //       "Pelo menos 1 letra minúscula;\n"
+                    //       "Pelo menos 1 letra maiúscula;\n"
+                    //       "Pelo menos 1 número;\n"
+                    //       "Pelo menos 1 caracter especial;\n"
+                    //       "Pelo menos 8 dígitos;";
+                    // }
+                    if (!RegExp(r'^.{8,}$').hasMatch(value)) {
+                      return "Pelo menos 8 dígitos.";
                     }
                     // the email is valid
                     return null;
@@ -456,6 +484,19 @@ class _SendUserInformationState extends State<_SendUserInformation> {
               return const SizedBox();
             }
           } else if (snapshot.hasError) {
+            if ('${snapshot.error}' ==
+                'Invalid argument: "Unauthorized access"') {
+              Future.delayed(const Duration(seconds: 2), () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LoginPage(title: 'Agnes'),
+                  ),
+                );
+              });
+
+              return const UnauthorizedAccessMessage();
+            }
             // Unknown Error Message
             return const UnknownErrorMessage();
           }

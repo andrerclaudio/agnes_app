@@ -98,6 +98,53 @@ class UnknownErrorMessage extends StatelessWidget {
   }
 }
 
+class UnauthorizedAccessMessage extends StatelessWidget {
+  const UnauthorizedAccessMessage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: height * 0.3,
+                width: width * 0.5,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('./assets/graphics/sorry.png'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              const Text(
+                'Usuário ou senha incorretos!',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                softWrap: true,
+                overflow: TextOverflow.visible,
+                maxLines: 4,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class EmailAlreadyCheckedMessage extends StatelessWidget {
   const EmailAlreadyCheckedMessage({Key? key}) : super(key: key);
 

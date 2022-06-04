@@ -12,9 +12,9 @@ import 'dart:typed_data';
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
+import 'package:agnes_app/views/login_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
 import 'package:flutter/material.dart';
-
 // Added
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -38,7 +38,6 @@ class UserReadingScreenState extends State<UserReadingScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
 
     return FutureBuilder<List<UserShelfBooks>>(
       future: _fetchBookList,
@@ -46,6 +45,19 @@ class UserReadingScreenState extends State<UserReadingScreen> {
         if (snapshot.hasData) {
           return BooksList(data: snapshot.data!);
         } else if (snapshot.hasError) {
+          if ('${snapshot.error}' ==
+              'Invalid argument: "Unauthorized access"') {
+            Future.delayed(const Duration(seconds: 2), () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LoginPage(title: 'Agnes'),
+                ),
+              );
+            });
+
+            return const UnauthorizedAccessMessage();
+          }
           // Unknown Error Message
           return const UnknownErrorMessage();
         }
