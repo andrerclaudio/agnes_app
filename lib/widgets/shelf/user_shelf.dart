@@ -4,18 +4,23 @@ User Shelf related methods.
 
  */
 
+// Local
 import 'dart:convert';
 import 'dart:typed_data';
 
+// Application
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
 import 'package:flutter/material.dart';
+
+// Added
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class UserReadingScreen extends StatefulWidget {
-  const UserReadingScreen({Key? key, required this.email, required this.password})
+  const UserReadingScreen(
+      {Key? key, required this.email, required this.password})
       : super(key: key);
 
   final String email;

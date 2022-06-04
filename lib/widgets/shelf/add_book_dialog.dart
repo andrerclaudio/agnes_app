@@ -4,16 +4,20 @@ Add book to User Shelf methods.
 
  */
 
+// Local
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
+// Application
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
 import 'package:flutter/material.dart';
+
+// Added
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AddNewBook extends StatefulWidget {
@@ -84,7 +88,7 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
                     decoration: const InputDecoration(
                       icon: Icon(Icons.format_size_sharp),
                       helperText:
-                      'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
+                          'Você encontra o código ISBN próximo ao código de barras, no verso do livro. \nPor exemplo: 978-8576573937',
                       helperMaxLines: 4,
                       labelText: 'Digite o código ISBN',
                     ),
@@ -137,10 +141,11 @@ class _AskIsbnCodeState extends State<_AskIsbnCode> {
 }
 
 class FetchBookInfo extends StatefulWidget {
-  const FetchBookInfo({Key? key,
-    required this.email,
-    required this.password,
-    required this.isbn})
+  const FetchBookInfo(
+      {Key? key,
+      required this.email,
+      required this.password,
+      required this.isbn})
       : super(key: key);
 
   final String email;
@@ -408,10 +413,11 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
 }
 
 class AddNewBookToShelf extends StatefulWidget {
-  const AddNewBookToShelf({Key? key,
-    required this.email,
-    required this.password,
-    required this.isbn})
+  const AddNewBookToShelf(
+      {Key? key,
+      required this.email,
+      required this.password,
+      required this.isbn})
       : super(key: key);
 
   final String email;
@@ -425,7 +431,7 @@ class AddNewBookToShelf extends StatefulWidget {
 class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
   late Future<BookAdded> futureData;
   late final Future<List<BookAdded>> _addNewBookToShelf =
-  addNewBookToShelf(widget.email, widget.password, widget.isbn);
+      addNewBookToShelf(widget.email, widget.password, widget.isbn);
 
   @override
   Widget build(BuildContext context) {
