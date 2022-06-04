@@ -467,7 +467,7 @@ class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
               if (info[0].successOnRequest) {
                 Future.delayed(const Duration(seconds: 3), () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pushReplacement(
+                  Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (BuildContext context) => HomePage(
                           email: widget.email, password: widget.password),

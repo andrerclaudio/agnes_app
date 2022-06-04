@@ -8,10 +8,15 @@ Sign Up related methods.
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/generic/requests.dart';
 import 'package:agnes_app/models/book_item.dart';
+import 'package:agnes_app/models/storage_item.dart';
+import 'package:agnes_app/services/secure_storage.dart';
+import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/views/login_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
+
 // Local
 import 'package:flutter/material.dart';
+
 // Added
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
@@ -67,8 +72,8 @@ class _AskUserEmailState extends State<_AskUserEmail> {
             children: [
               TextFormField(
                 decoration: const InputDecoration(
-                  helperText: 'email@email.com',
-                  labelText: 'Enter your email',
+                  helperText: 'seu_email@email.com',
+                  labelText: 'Digite o email que será cadastrado',
                   icon: Icon(Icons.email),
                 ),
                 keyboardType: TextInputType.emailAddress,
@@ -76,12 +81,12 @@ class _AskUserEmailState extends State<_AskUserEmail> {
                 validator: (value) {
                   // Check if this field is empty
                   if (value == null || value.isEmpty) {
-                    return 'This field is required';
+                    return 'Este campo é necessário';
                   }
                   if (!RegExp(
                           r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+.[a-zA-Z]+")
                       .hasMatch(value)) {
-                    return "Please enter a valid email address";
+                    return "Por favor, digite um endereço de email válido!";
                   }
                   // the email is valid
                   return null;
@@ -98,7 +103,7 @@ class _AskUserEmailState extends State<_AskUserEmail> {
                     );
                   }
                 },
-                child: const Text('Check Email'),
+                child: const Text('Cadastrar...'),
               ),
             ],
           ),
@@ -455,6 +460,17 @@ class _SendUserInformationState extends State<_SendUserInformation> {
   late final Future<List<CreateUserForm>> _sendPassword =
       addUserToApp(widget.email, widget.password);
 
+  late String userId;
+  late String lastAccess;
+
+  final StorageService _storageService = StorageService();
+
+  void saveImportantData() async {
+    await _storageService.writeSecureData(StorageItem('userId', userId));
+    await _storageService
+        .writeSecureData(StorageItem('lastAccess', lastAccess));
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -471,17 +487,37 @@ class _SendUserInformationState extends State<_SendUserInformation> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             List<CreateUserForm> info = snapshot.data!;
-
-            // The email was checked
+            // The User was created
             if (info[0].successOnRequest) {
-              Future.delayed(const Duration(seconds: 0), () {
+              userId = info[0].userId;
+              lastAccess = info[0].lastAccess;
+
+              // Save the important information
+              saveImportantData();
+
+              Future.delayed(const Duration(seconds: 4), () {
                 Navigator.of(context).pop();
 
-                Navigator.of(context)
-                    .pushNamedAndRemoveUntil('/', (route) => false);
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => HomePage(
+                        email: widget.email, password: widget.password),
+                  ),
+                );
               });
 
-              return const SizedBox();
+              return AlertDialog(
+                backgroundColor: const Color(Constant.objectsColor),
+                title: const Text('O usuário foi criado com sucesso!'),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children: const <Widget>[
+                      Text('Você será redirecionado em instantes.\n'
+                          'Aguarde, por favor.'),
+                    ],
+                  ),
+                ),
+              );
             }
           } else if (snapshot.hasError) {
             if ('${snapshot.error}' ==

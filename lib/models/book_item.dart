@@ -105,7 +105,7 @@ class CreateUserForm {
   final bool successOnRequest;
   final int errorCode;
   final String userId;
-  final int lastAccess;
+  final String lastAccess;
 
   const CreateUserForm({
     required this.successOnRequest,
@@ -119,7 +119,7 @@ class CreateUserForm {
       successOnRequest: json['successOnRequest'] as bool,
       errorCode: json['errorCode'] as int,
       userId: json['userId'] as String,
-      lastAccess: json['lastAccess'] as int,
+      lastAccess: json['lastAccess'] as String,
     );
   }
 }

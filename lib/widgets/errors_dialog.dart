@@ -78,7 +78,7 @@ class UnknownErrorMessage extends StatelessWidget {
               width: width * 0.5,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('./assets/graphics/sorry.png'),
+                  image: AssetImage('./assets/graphics/problem.png'),
                   fit: BoxFit.fill,
                 ),
               ),
