@@ -32,8 +32,16 @@ class UserReadingScreen extends StatefulWidget {
 
 class UserReadingScreenState extends State<UserReadingScreen> {
   late Future<UserShelfBooks> futureData;
-  late final Future<List<UserShelfBooks>> _fetchBookList =
+  late Future<List<UserShelfBooks>> _fetchBookList =
       fetchBookList(widget.email, widget.password);
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _fetchBookList = fetchBookList(widget.email, widget.password);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,10 +127,6 @@ class BooksList extends StatelessWidget {
                         image: img.image,
                         fit: BoxFit.fill,
                       ),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2,
-                      ),
                     ),
                   ),
                   Container(
@@ -134,12 +138,8 @@ class BooksList extends StatelessWidget {
                     child: Container(
                       height: height * 0.25,
                       alignment: Alignment.topLeft,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 2,
-                        ),
                       ),
                       child: Column(
                         children: [

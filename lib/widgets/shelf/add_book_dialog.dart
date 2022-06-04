@@ -492,7 +492,7 @@ class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
                     ErrorsConstants.noBookWasFoundWithTheGivenIsbnCode) {
                   return const NoBookFoundByIsbnMessage();
                 } else if (info[0].errorCode ==
-                    ErrorsConstants.emailAlreadyChecked) {
+                    ErrorsConstants.bookHasAlreadyBeenAddedToBookShelf) {
                   return const BookAlreadyAddedToShelfMessage();
                 }
               }

@@ -8,7 +8,6 @@ Application Home View
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/widgets/shelf/add_book_dialog.dart';
 import 'package:agnes_app/widgets/shelf/user_shelf.dart';
-
 // Local
 import 'package:flutter/material.dart';
 
@@ -48,6 +47,16 @@ class HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      UserReadingScreen(email: widget.email, password: widget.password);
+      _selectedIndex = Constant.initialIndex;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
@@ -74,6 +83,7 @@ class HomePageState extends State<HomePage> {
         currentIndex: _selectedIndex,
         selectedItemColor: const Color(Constant.objectsColor),
         onTap: _onItemTapped,
+        enableFeedback: true,
       ),
       floatingActionButton: AnimatedOpacity(
         opacity: false ? 0.0 : 0.8,
