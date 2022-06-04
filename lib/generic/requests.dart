@@ -5,11 +5,15 @@ All requests are pointed to api.agnes.ooo
 
  */
 
+// Local
 import 'dart:convert';
 
+// Application
 import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:flutter/foundation.dart';
+
+// Added
 import 'package:http/http.dart' as http;
 
 // Send the User Email to Application ------------------------------------------
