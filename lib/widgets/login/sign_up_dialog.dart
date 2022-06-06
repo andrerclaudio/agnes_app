@@ -13,10 +13,8 @@ import 'package:agnes_app/services/secure_storage.dart';
 import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/views/login_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
-
 // Local
 import 'package:flutter/material.dart';
-
 // Added
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
@@ -165,19 +163,36 @@ class _SendUserEmailState extends State<_SendUserEmail> {
           } else if (snapshot.hasError) {
             if ('${snapshot.error}' ==
                 'Invalid argument: "Unauthorized access"') {
-              Future.delayed(const Duration(seconds: 2), () {
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginPage(title: 'Agnes')));
+
+                // Unknown Error Message
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LoginPage(title: 'Agnes'),
+                    builder: (context) => const UnauthorizedAccessMessage(),
                   ),
                 );
               });
+            } else {
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginPage(title: 'Agnes')));
 
-              return const UnauthorizedAccessMessage();
+                // Unknown Error Message
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UnknownErrorMessage(),
+                  ),
+                );
+              });
             }
-            // Unknown Error Message
-            return const UnknownErrorMessage();
           }
 
           return Center(
@@ -323,19 +338,36 @@ class _SendUserCodeState extends State<_SendUserCode> {
           } else if (snapshot.hasError) {
             if ('${snapshot.error}' ==
                 'Invalid argument: "Unauthorized access"') {
-              Future.delayed(const Duration(seconds: 2), () {
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginPage(title: 'Agnes')));
+
+                // Unknown Error Message
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LoginPage(title: 'Agnes'),
+                    builder: (context) => const UnauthorizedAccessMessage(),
                   ),
                 );
               });
+            } else {
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginPage(title: 'Agnes')));
 
-              return const UnauthorizedAccessMessage();
+                // Unknown Error Message
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UnknownErrorMessage(),
+                  ),
+                );
+              });
             }
-            // Unknown Error Message
-            return const UnknownErrorMessage();
           }
 
           return Center(
@@ -522,19 +554,36 @@ class _SendUserInformationState extends State<_SendUserInformation> {
           } else if (snapshot.hasError) {
             if ('${snapshot.error}' ==
                 'Invalid argument: "Unauthorized access"') {
-              Future.delayed(const Duration(seconds: 2), () {
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginPage(title: 'Agnes')));
+
+                // Unknown Error Message
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const LoginPage(title: 'Agnes'),
+                    builder: (context) => const UnauthorizedAccessMessage(),
                   ),
                 );
               });
+            } else {
+              Future.delayed(const Duration(seconds: 0), () {
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginPage(title: 'Agnes')));
 
-              return const UnauthorizedAccessMessage();
+                // Unknown Error Message
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const UnknownErrorMessage(),
+                  ),
+                );
+              });
             }
-            // Unknown Error Message
-            return const UnknownErrorMessage();
           }
 
           return Center(

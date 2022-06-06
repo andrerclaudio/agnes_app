@@ -27,8 +27,8 @@ List<UserSignUpCredentials> userEmailInfo(String responseBody) {
 
 Future<List<UserSignUpCredentials>> addEmailToApp(String email) async {
   final response = await http.Client().post(
-    Uri.parse('http://192.168.0.163:8000/unknown/validate_email?email=$email'),
-    // Uri.parse('http://api.agnes.ooo/unknown/validate_email?email=$email'),
+    // Uri.parse('http://192.168.0.163:8000/unknown/validate_email?email=$email'),
+    Uri.parse('http://api.agnes.ooo/unknown/validate_email?email=$email'),
     headers: {"Content-Type": "application/json"},
   );
 
@@ -57,8 +57,8 @@ Future<List<UserSignUpCredentials>> checkVerificationCode(
     String email, String code) async {
   final response = await http.Client().get(
     Uri.parse(
-        'http://192.168.0.163:8000/unknown/validate_code?email=$email&code=$code'),
-    // 'http://api.agnes.ooo/unknown/validate_code?email=$email&code=$code'),
+        // 'http://192.168.0.163:8000/unknown/validate_code?email=$email&code=$code'),
+        'http://api.agnes.ooo/unknown/validate_code?email=$email&code=$code'),
     headers: {"Content-Type": "application/json"},
   );
 
@@ -85,8 +85,8 @@ List<CreateUserForm> createUser(String responseBody) {
 Future<List<CreateUserForm>> addUserToApp(String email, String password) async {
   final response = await http.Client().post(
     Uri.parse(
-        'http://192.168.0.163:8000/unknown/create_user?email=$email&password=$password'),
-    // Uri.parse('http://api.agnes.ooo/unknown/create_user?email=$email'),
+        // 'http://192.168.0.163:8000/unknown/create_user?email=$email&password=$password'),
+        'http://api.agnes.ooo/unknown/create_user?email=$email&password=$password'),
     headers: {"Content-Type": "application/json"},
   );
 
@@ -151,8 +151,8 @@ Future<List<BookInformation>> fetchBookInfoByIsbn(
 
   final response = await http.Client().get(
     Uri.parse(
-        'http://192.168.0.163:8000/library/fetch_book_information?isbnCode=$isbn'),
-    // 'http://api.agnes.ooo/library/fetch_book_information?isbnCode=$isbn'),
+        // 'http://192.168.0.163:8000/library/fetch_book_information?isbnCode=$isbn'),
+        'http://api.agnes.ooo/library/fetch_book_information?isbnCode=$isbn'),
     headers: {
       "Content-Type": "application/json",
       "authorization": 'Basic $basicAuth'
@@ -186,8 +186,8 @@ Future<List<BookAdded>> addNewBookToShelf(
 
   final response = await http.Client().post(
     Uri.parse(
-        'http://192.168.0.163:8000/user/shelf/add_new_book?isbnCode=$isbn'),
-    // 'http://api.agnes.ooo/user/shelf/add_new_book?isbnCode=$isbn'),
+        // 'http://192.168.0.163:8000/user/shelf/add_new_book?isbnCode=$isbn'),
+        'http://api.agnes.ooo/user/shelf/add_new_book?isbnCode=$isbn'),
     headers: {
       "Content-Type": "application/json",
       "authorization": 'Basic $basicAuth'

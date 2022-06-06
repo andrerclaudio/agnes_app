@@ -55,19 +55,36 @@ class UserReadingScreenState extends State<UserReadingScreen> {
         } else if (snapshot.hasError) {
           if ('${snapshot.error}' ==
               'Invalid argument: "Unauthorized access"') {
-            Future.delayed(const Duration(seconds: 2), () {
+            Future.delayed(const Duration(seconds: 0), () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const LoginPage(title: 'Agnes')));
+
+              // Unknown Error Message
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const LoginPage(title: 'Agnes'),
+                  builder: (context) => const UnauthorizedAccessMessage(),
                 ),
               );
             });
+          } else {
+            Future.delayed(const Duration(seconds: 0), () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const LoginPage(title: 'Agnes')));
 
-            return const UnauthorizedAccessMessage();
+              // Unknown Error Message
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UnknownErrorMessage(),
+                ),
+              );
+            });
           }
-          // Unknown Error Message
-          return const UnknownErrorMessage();
         }
 
         return Center(

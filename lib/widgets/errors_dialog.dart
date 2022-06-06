@@ -66,32 +66,44 @@ class UnknownErrorMessage extends StatelessWidget {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              height: height * 0.3,
-              width: width * 0.5,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('./assets/graphics/problem.png'),
-                  fit: BoxFit.fill,
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: SizedBox(
+        height: height,
+        width: width,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: height * 0.3,
+                  width: width * 0.5,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('./assets/graphics/problem.png'),
+                      fit: BoxFit.fill,
+                    ),
+                  ),
                 ),
-              ),
+                const Text(
+                  'Oops! Alguma coisa inesperada aconteceu.\n'
+                  'Tente novamente, por favor!',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                  maxLines: 4,
+                ),
+              ],
             ),
-            const Text(
-              'Oops! Alguma coisa inesperada aconteceu.\n'
-              'Tente novamente, por favor!',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-              softWrap: true,
-              overflow: TextOverflow.visible,
-              maxLines: 4,
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -113,31 +125,35 @@ class UnauthorizedAccessMessage extends StatelessWidget {
           height: MediaQuery.of(context).padding.top,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                height: height * 0.3,
-                width: width * 0.5,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('./assets/graphics/sorry.png'),
-                    fit: BoxFit.fill,
+      body: SizedBox(
+        height: height,
+        width: width,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  height: height * 0.3,
+                  width: width * 0.5,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('./assets/graphics/sorry.png'),
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
-              ),
-              const Text(
-                'Usuário ou senha incorretos!',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                softWrap: true,
-                overflow: TextOverflow.visible,
-                maxLines: 4,
-              ),
-            ],
+                const Text(
+                  'Usuário ou senha incorretos!',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  softWrap: true,
+                  overflow: TextOverflow.visible,
+                  maxLines: 4,
+                ),
+              ],
+            ),
           ),
         ),
       ),

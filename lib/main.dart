@@ -2,18 +2,15 @@
 Root file for Agnes application.
 */
 
+// Local
 import 'dart:math';
 
-import 'package:agnes_app/generic/constant.dart';
 // Application
-
+import 'package:agnes_app/generic/constant.dart';
 import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/views/login_view.dart';
-
-// Local
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 // Added
 import 'package:google_fonts/google_fonts.dart';
 
