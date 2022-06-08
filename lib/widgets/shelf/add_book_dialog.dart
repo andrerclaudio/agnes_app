@@ -10,9 +10,9 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 // Application
-import 'package:agnes_app/generic/constant.dart';
-import 'package:agnes_app/generic/requests.dart';
+import 'package:agnes_app/constant.dart';
 import 'package:agnes_app/models/book_item.dart';
+import 'package:agnes_app/services/requests.dart';
 import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/views/login_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';

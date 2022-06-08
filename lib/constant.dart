@@ -18,9 +18,9 @@ class Constant {
   static const objectsColor = 0xff17bcce;
 
   // Api related
-  static const apiBaseURL = 'http://api.agnes.ooo/';
+  static const apiBaseURL = 'https://api.agnes.ooo/';
   static const apiReadingScreenURL =
-      'http://api.agnes.ooo/user/shelf/current_readings';
+      'https://api.agnes.ooo/user/shelf/current_readings';
 
   // static const apiBaseURL = 'http://192.168.0.163:8000/';
   // static const apiReadingScreenURL =

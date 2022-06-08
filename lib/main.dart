@@ -6,7 +6,7 @@ Root file for Agnes application.
 import 'dart:math';
 
 // Application
-import 'package:agnes_app/generic/constant.dart';
+import 'package:agnes_app/constant.dart';
 import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/views/login_view.dart';
 import 'package:flutter/material.dart';

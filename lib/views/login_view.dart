@@ -5,10 +5,9 @@ Application  Login View
  */
 
 // Application
-import 'package:agnes_app/generic/constant.dart';
+import 'package:agnes_app/constant.dart';
 import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/widgets/login/sign_up_dialog.dart';
-
 // Local
 import 'package:flutter/material.dart';
 
