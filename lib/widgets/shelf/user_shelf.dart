@@ -1,22 +1,21 @@
 /*
-
 User Shelf related methods.
-
  */
 
-// Local
 import 'dart:convert';
 import 'dart:typed_data';
 
-// Application
 import 'package:agnes_app/constant.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:agnes_app/services/requests.dart';
 import 'package:agnes_app/views/login_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
 import 'package:flutter/material.dart';
-// Added
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+/* -----------------------------------------------------------------------------
+Show the Users active or paused readings.
+----------------------------------------------------------------------------- */
 
 class UserReadingScreen extends StatefulWidget {
   const UserReadingScreen(
@@ -170,7 +169,8 @@ class BooksList extends StatelessWidget {
                                 child: Text(
                                   title,
                                   softWrap: true,
-                                  overflow: TextOverflow.visible,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
                                 ),
                               ),
                             ],
@@ -248,5 +248,27 @@ class BooksList extends StatelessWidget {
     } else {
       return const NoActiveOrPausedReadingFoundMessage();
     }
+  }
+}
+
+/* -----------------------------------------------------------------------------
+Show the Users shelf.
+----------------------------------------------------------------------------- */
+
+class UserShelfScreen extends StatefulWidget {
+  const UserShelfScreen({Key? key, required this.email, required this.password})
+      : super(key: key);
+
+  final String email;
+  final String password;
+
+  @override
+  State<UserShelfScreen> createState() => _UserShelfScreenState();
+}
+
+class _UserShelfScreenState extends State<UserShelfScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox();
   }
 }

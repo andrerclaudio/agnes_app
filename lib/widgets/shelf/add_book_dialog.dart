@@ -1,15 +1,11 @@
 /*
-
 Add book to User Shelf methods.
-
  */
 
-// Local
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-// Application
 import 'package:agnes_app/constant.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:agnes_app/services/requests.dart';
@@ -17,7 +13,6 @@ import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/views/login_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
 import 'package:flutter/material.dart';
-// Added
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class AddNewBook extends StatefulWidget {
@@ -258,7 +253,7 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
       final String publisher = bookInfo['publisher'];
       final String isbn = bookInfo['isbn'];
       final String pagesQty = bookInfo['pagesQty'];
-      // final String description = bookInfo['description'];
+      final String description = bookInfo['description'];
       // final String link = bookInfo['link'];
       // final String genres = bookInfo['genres'];
       // final String coverType = bookInfo['coverType'];
@@ -274,7 +269,7 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
         height: height,
         width: width,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
+          padding: const EdgeInsets.fromLTRB(4, 8, 4, 4),
           child: Column(
             children: [
               Row(
@@ -288,10 +283,6 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                         image: img.image,
                         fit: BoxFit.fill,
                       ),
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2,
-                      ),
                     ),
                   ),
                   Container(
@@ -303,12 +294,8 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                     child: Container(
                       height: height * 0.25,
                       alignment: Alignment.topLeft,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 2,
-                        ),
                       ),
                       child: Column(
                         children: [
@@ -393,7 +380,15 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
+              Text(
+                description,
+                maxLines: 10,
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.justify,
+              ),
+              const SizedBox(height: 15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -426,7 +421,7 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                       maximumSize: Size(height * 0.2, 50),
                     ),
                     child: const Text(
-                      'Voltar',
+                      'Colocar na estante',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -435,6 +430,40 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                   ),
                 ],
               ),
+              const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color(Constant.objectsColor),
+                      minimumSize: Size(height * 0.2, 50),
+                      maximumSize: Size(height * 0.2, 50),
+                    ),
+                    child: const Text(
+                      'Adicionar na Lista de Desejos',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context, false),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: const Color(Constant.objectsColor),
+                      minimumSize: Size(height * 0.2, 50),
+                      maximumSize: Size(height * 0.2, 50),
+                    ),
+                    child: const Text(
+                      'Voltar',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    onPressed: () => Navigator.pop(context, false),
+                  ),
+                ],
+              )
             ],
           ),
         ),

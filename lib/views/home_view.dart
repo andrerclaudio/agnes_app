@@ -27,7 +27,7 @@ class HomePageState extends State<HomePage> {
 
   late final List<Widget> _widgetOptions = <Widget>[
     UserReadingScreen(email: widget.email, password: widget.password),
-    UserReadingScreen(email: widget.email, password: widget.password),
+    UserShelfScreen(email: widget.email, password: widget.password),
   ];
 
   void _addNewBook() {
@@ -76,8 +76,8 @@ class HomePageState extends State<HomePage> {
             label: 'Lendo',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.menu_book_sharp),
-            label: 'Lendo',
+            icon: Icon(Icons.library_books_sharp),
+            label: 'Estante',
           ),
         ],
         currentIndex: _selectedIndex,
@@ -86,7 +86,7 @@ class HomePageState extends State<HomePage> {
         enableFeedback: true,
       ),
       floatingActionButton: AnimatedOpacity(
-        opacity: false ? 0.0 : 0.8,
+        opacity: 0.8,
         duration: const Duration(milliseconds: 1000),
         child: FloatingActionButton.extended(
           backgroundColor: const Color(Constant.objectsColor),
