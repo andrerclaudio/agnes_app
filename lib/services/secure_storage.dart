@@ -4,10 +4,7 @@ Secure Storage methods.
 
  */
 
-// Application
 import 'package:agnes_app/models/storage_item.dart';
-
-// Added
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageService {
@@ -19,12 +16,12 @@ class StorageService {
   }
 
   AndroidOptions _getAndroidOptions() => const AndroidOptions(
-    encryptedSharedPreferences: true,
-  );
+        encryptedSharedPreferences: true,
+      );
 
   Future<String?> readSecureData(String key) async {
     var readData =
-    await _secureStorage.read(key: key, aOptions: _getAndroidOptions());
+        await _secureStorage.read(key: key, aOptions: _getAndroidOptions());
     return readData;
   }
 
@@ -41,7 +38,7 @@ class StorageService {
   Future<List<StorageItem>> readAllSecureData() async {
     var allData = await _secureStorage.readAll(aOptions: _getAndroidOptions());
     List<StorageItem> list =
-    allData.entries.map((e) => StorageItem(e.key, e.value)).toList();
+        allData.entries.map((e) => StorageItem(e.key, e.value)).toList();
     return list;
   }
 

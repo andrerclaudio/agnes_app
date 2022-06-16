@@ -4,7 +4,6 @@ Application constant values.
 
  */
 
-// Local
 import 'package:flutter/material.dart';
 
 class Constant {

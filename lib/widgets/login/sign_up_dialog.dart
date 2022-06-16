@@ -4,7 +4,6 @@ Sign Up related methods.
 
  */
 
-// Application
 import 'package:agnes_app/constant.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:agnes_app/models/storage_item.dart';
@@ -13,9 +12,7 @@ import 'package:agnes_app/services/secure_storage.dart';
 import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/views/login_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
-// Local
 import 'package:flutter/material.dart';
-// Added
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 

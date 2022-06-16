@@ -388,7 +388,7 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.justify,
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -400,6 +400,7 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                     ),
                     child: const Text(
                       'Iniciar leitura',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -414,23 +415,30 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                       ),
                     ),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: const Color(Constant.objectsColor),
-                      minimumSize: Size(height * 0.2, 50),
-                      maximumSize: Size(height * 0.2, 50),
-                    ),
-                    child: const Text(
-                      'Colocar na estante',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () => Navigator.pop(context, false),
-                  ),
                 ],
               ),
-              const SizedBox(height: 15),
+              // const SizedBox(height: 10),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: [
+              //     ElevatedButton(
+              //       style: ElevatedButton.styleFrom(
+              //         primary: const Color(Constant.objectsColor),
+              //         minimumSize: Size(height * 0.2, 50),
+              //         maximumSize: Size(height * 0.2, 50),
+              //       ),
+              //       child: const Text(
+              //         'Adicionar na Lista de Desejos',
+              //         textAlign: TextAlign.center,
+              //         style: TextStyle(
+              //           fontWeight: FontWeight.bold,
+              //         ),
+              //       ),
+              //       onPressed: () => Navigator.pop(context, false),
+              //     ),
+              //   ],
+              // ),
+              const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -441,21 +449,8 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                       maximumSize: Size(height * 0.2, 50),
                     ),
                     child: const Text(
-                      'Adicionar na Lista de Desejos',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    onPressed: () => Navigator.pop(context, false),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: const Color(Constant.objectsColor),
-                      minimumSize: Size(height * 0.2, 50),
-                      maximumSize: Size(height * 0.2, 50),
-                    ),
-                    child: const Text(
                       'Voltar',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -463,7 +458,7 @@ class _BookInfoByIsbnState extends State<BookInfoByIsbn> {
                     onPressed: () => Navigator.pop(context, false),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

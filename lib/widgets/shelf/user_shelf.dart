@@ -132,111 +132,135 @@ class BooksList extends StatelessWidget {
 
             return Padding(
               padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
-              child: Row(
+              child: Column(
                 children: [
-                  Container(
-                    height: height * 0.25,
-                    width: width * 0.35,
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      image: DecorationImage(
-                        image: img.image,
-                        fit: BoxFit.fill,
+                  Row(
+                    children: [
+                      Container(
+                        height: height * 0.25,
+                        width: width * 0.35,
+                        decoration: BoxDecoration(
+                          color: Colors.grey,
+                          image: DecorationImage(
+                            image: img.image,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  Container(
-                    height: height * 0.25,
-                    width: width * 0.01,
-                    color: Colors.white,
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: height * 0.25,
-                      alignment: Alignment.topLeft,
-                      decoration: const BoxDecoration(
+                      Container(
+                        height: height * 0.25,
+                        width: width * 0.01,
                         color: Colors.white,
                       ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              const Text(
-                                'Nome: ',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                      Expanded(
+                        child: Container(
+                          height: height * 0.25,
+                          alignment: Alignment.topLeft,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                          ),
+                          child: Column(
+                            children: <Widget>[
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Nome: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      title,
+                                      softWrap: true,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              Flexible(
-                                child: Text(
-                                  title,
-                                  softWrap: true,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Autor: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      author,
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Editora: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      publisher,
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Isbn: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      isbn,
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Text(
+                                    'Qtd. de pág.: ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      pagesQty,
+                                      softWrap: true,
+                                      overflow: TextOverflow.visible,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              const Text(
-                                'Autor: ',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Flexible(
-                                child: Text(
-                                  author,
-                                  softWrap: true,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text(
-                                'Editora: ',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Flexible(
-                                child: Text(
-                                  publisher,
-                                  softWrap: true,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text(
-                                'Isbn: ',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Flexible(
-                                child: Text(
-                                  isbn,
-                                  softWrap: true,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Text(
-                                'Qtd. de pág.: ',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Flexible(
-                                child: Text(
-                                  pagesQty,
-                                  softWrap: true,
-                                  overflow: TextOverflow.visible,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+                        ),
                       ),
+                    ],
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                            width: 1.0, color: Color(Constant.objectsColor)),
+                      ),
+                    ),
+                    height: height * 0.04,
+                    width: width,
+                    // color: Colors.white,
+                    child: TextButton(
+                      onPressed: () {},
+                      child: const Text('Detalhes sobre a leitura ...'),
                     ),
                   ),
                 ],

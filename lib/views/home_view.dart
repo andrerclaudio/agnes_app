@@ -4,11 +4,9 @@ Application Home View
 
  */
 
-// Application
 import 'package:agnes_app/constant.dart';
 import 'package:agnes_app/widgets/shelf/add_book_dialog.dart';
 import 'package:agnes_app/widgets/shelf/user_shelf.dart';
-// Local
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
