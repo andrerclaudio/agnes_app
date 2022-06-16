@@ -50,7 +50,11 @@ class UserReadingScreenState extends State<UserReadingScreen> {
       future: _fetchBookList,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return BooksList(data: snapshot.data!);
+          return BooksList(
+            data: snapshot.data!,
+            email: widget.email,
+            password: widget.password,
+          );
         } else if (snapshot.hasError) {
           if ('${snapshot.error}' ==
               'Invalid argument: "Unauthorized access"') {
@@ -98,26 +102,38 @@ class UserReadingScreenState extends State<UserReadingScreen> {
   }
 }
 
-class BooksList extends StatelessWidget {
-  const BooksList({Key? key, required this.data}) : super(key: key);
+class BooksList extends StatefulWidget {
+  const BooksList(
+      {Key? key,
+      required this.data,
+      required this.email,
+      required this.password})
+      : super(key: key);
 
   final List<UserShelfBooks> data;
+  final String email;
+  final String password;
 
+  @override
+  State<BooksList> createState() => _BooksListState();
+}
+
+class _BooksListState extends State<BooksList> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     // Validate whether the answer is valid or not
-    if (data[0].successOnRequest) {
+    if (widget.data[0].successOnRequest) {
       return SizedBox(
         height: height,
         width: width,
         child: ListView.builder(
           padding: const EdgeInsets.all(2),
-          itemCount: data.length,
+          itemCount: widget.data.length,
           itemBuilder: (context, index) {
-            final Map bookInfo = data[index].bookInfo;
+            final Map bookInfo = widget.data[index].bookInfo;
             final String coverPic = bookInfo['coverPic'];
             final String title = bookInfo['title'];
             final String author = bookInfo['author'];
@@ -128,10 +144,10 @@ class BooksList extends StatelessWidget {
             // Convert the CoverPic Json String object into Image
             final pic = json.decode(coverPic);
             Uint8List bytesImage = const Base64Decoder().convert(pic);
-            Image img = Image.memory(bytesImage);
+            Image bookCover = Image.memory(bytesImage);
 
             return Padding(
-              padding: const EdgeInsets.fromLTRB(2, 2, 2, 4),
+              padding: const EdgeInsets.fromLTRB(2, 2, 2, 8),
               child: Column(
                 children: [
                   Row(
@@ -142,7 +158,7 @@ class BooksList extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.grey,
                           image: DecorationImage(
-                            image: img.image,
+                            image: bookCover.image,
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -166,7 +182,7 @@ class BooksList extends StatelessWidget {
                                   const Text(
                                     'Nome: ',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -183,7 +199,7 @@ class BooksList extends StatelessWidget {
                                   const Text(
                                     'Autor: ',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -199,7 +215,7 @@ class BooksList extends StatelessWidget {
                                   const Text(
                                     'Editora: ',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -215,7 +231,7 @@ class BooksList extends StatelessWidget {
                                   const Text(
                                     'Isbn: ',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -231,7 +247,7 @@ class BooksList extends StatelessWidget {
                                   const Text(
                                     'Qtd. de pág.: ',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.bold),
+                                    TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -257,10 +273,20 @@ class BooksList extends StatelessWidget {
                     ),
                     height: height * 0.04,
                     width: width,
-                    // color: Colors.white,
                     child: TextButton(
-                      onPressed: () {},
-                      child: const Text('Detalhes sobre a leitura ...'),
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => BookDetailScreen(
+                              email: widget.email,
+                              password: widget.password,
+                              bookCover: bookCover,
+                              bookInfo: bookInfo,
+                            ),
+                          ),
+                        );
+                      },
+                      child: const Text('Clique aqui para mais detalhes ...'),
                     ),
                   ),
                 ],
@@ -294,5 +320,68 @@ class _UserShelfScreenState extends State<UserShelfScreen> {
   @override
   Widget build(BuildContext context) {
     return const SizedBox();
+  }
+}
+
+/* -----------------------------------------------------------------------------
+Books details.
+----------------------------------------------------------------------------- */
+
+class BookDetailScreen extends StatefulWidget {
+  const BookDetailScreen(
+      {Key? key,
+      required this.bookInfo,
+      required this.bookCover,
+      required this.email,
+      required this.password})
+      : super(key: key);
+
+  final Map bookInfo;
+  final Image bookCover;
+  final String email;
+  final String password;
+
+  @override
+  State<BookDetailScreen> createState() => _BookDetailScreenState();
+}
+
+class _BookDetailScreenState extends State<BookDetailScreen> {
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: SizedBox(
+        height: height,
+        width: width,
+        child: ListView(
+          padding: const EdgeInsets.all(10),
+          children: <Widget>[
+            Column(
+              children: [
+                Container(
+                  height: height * 0.35,
+                  width: width * 0.5,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    image: DecorationImage(
+                      image: widget.bookCover.image,
+                      fit: BoxFit.fill,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
