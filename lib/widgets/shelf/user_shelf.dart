@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'package:agnes_app/constant.dart';
 import 'package:agnes_app/models/book_item.dart';
 import 'package:agnes_app/services/requests.dart';
+import 'package:agnes_app/views/home_view.dart';
 import 'package:agnes_app/views/login_view.dart';
 import 'package:agnes_app/widgets/errors_dialog.dart';
 import 'package:flutter/material.dart';
@@ -182,7 +183,7 @@ class _BooksListState extends State<BooksList> {
                                   const Text(
                                     'Nome: ',
                                     style:
-                                    TextStyle(fontWeight: FontWeight.bold),
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -199,7 +200,7 @@ class _BooksListState extends State<BooksList> {
                                   const Text(
                                     'Autor: ',
                                     style:
-                                    TextStyle(fontWeight: FontWeight.bold),
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -215,7 +216,7 @@ class _BooksListState extends State<BooksList> {
                                   const Text(
                                     'Editora: ',
                                     style:
-                                    TextStyle(fontWeight: FontWeight.bold),
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -231,7 +232,7 @@ class _BooksListState extends State<BooksList> {
                                   const Text(
                                     'Isbn: ',
                                     style:
-                                    TextStyle(fontWeight: FontWeight.bold),
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -247,7 +248,7 @@ class _BooksListState extends State<BooksList> {
                                   const Text(
                                     'Qtd. de pág.: ',
                                     style:
-                                    TextStyle(fontWeight: FontWeight.bold),
+                                        TextStyle(fontWeight: FontWeight.bold),
                                   ),
                                   Flexible(
                                     child: Text(
@@ -286,7 +287,8 @@ class _BooksListState extends State<BooksList> {
                           ),
                         );
                       },
-                      child: const Text('Clique aqui para mais detalhes ...'),
+                      child:
+                          const Text('Clique aqui para ver mais detalhes ...'),
                     ),
                   ),
                 ],
@@ -351,6 +353,12 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
+    final String title = widget.bookInfo['title'];
+    final String author = widget.bookInfo['author'];
+    final String publisher = widget.bookInfo['publisher'];
+    final String isbn = widget.bookInfo['isbn'];
+    final String pagesQty = widget.bookInfo['pagesQty'];
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
@@ -377,11 +385,305 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                     ),
                   ),
                 ),
+                Container(
+                  height: height * 0.02,
+                  color: Colors.white,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: height * 0.04,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  UpdateBookStatus(
+                                email: widget.email,
+                                password: widget.password,
+                                bookStatus: 'finished',
+                                targetBookId: widget.bookInfo['targetBookId'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text('Finalizar'),
+                      ),
+                    ),
+                    Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          left: BorderSide(
+                              width: 2.0, color: Color(Constant.objectsColor)),
+                          right: BorderSide(
+                              width: 2.0, color: Color(Constant.objectsColor)),
+                        ),
+                      ),
+                      height: height * 0.04,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  UpdateBookStatus(
+                                email: widget.email,
+                                password: widget.password,
+                                bookStatus: 'paused',
+                                targetBookId: widget.bookInfo['targetBookId'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text('Pausar'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * 0.04,
+                      // width: width,
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  UpdateBookStatus(
+                                email: widget.email,
+                                password: widget.password,
+                                bookStatus: 'canceled',
+                                targetBookId: widget.bookInfo['targetBookId'],
+                              ),
+                            ),
+                          );
+                        },
+                        child: const Text('Cancelar'),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  height: height * 0.02,
+                  color: Colors.white,
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      'Nome: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Flexible(
+                      child: Text(
+                        title,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      'Autor: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Flexible(
+                      child: Text(
+                        author,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      'Editora: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Flexible(
+                      child: Text(
+                        publisher,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      'Isbn: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Flexible(
+                      child: Text(
+                        isbn,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Text(
+                      'Qtd. de pág.: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Flexible(
+                      child: Text(
+                        pagesQty,
+                        softWrap: true,
+                        overflow: TextOverflow.visible,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class UpdateBookStatus extends StatefulWidget {
+  const UpdateBookStatus(
+      {Key? key,
+      required this.email,
+      required this.password,
+      required this.bookStatus,
+      required this.targetBookId})
+      : super(key: key);
+
+  final String email;
+  final String password;
+  final String bookStatus;
+  final String targetBookId;
+
+  @override
+  State<UpdateBookStatus> createState() => _UpdateBookStatusState();
+}
+
+class _UpdateBookStatusState extends State<UpdateBookStatus> {
+  late final Future<List<BookStatus>> _updateBookStatus = changeBookStatus(
+      widget.email, widget.password, widget.bookStatus, widget.targetBookId);
+  late Future<BookStatus> futureData;
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(MediaQuery.of(context).padding.top),
+        child: SizedBox(
+          height: MediaQuery.of(context).padding.top,
+        ),
+      ),
+      body: FutureBuilder<List<BookStatus>>(
+          future: _updateBookStatus,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<BookStatus> info = snapshot.data!;
+
+              if (info[0].successOnRequest) {
+                Future.delayed(const Duration(seconds: 3), () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) => HomePage(
+                          email: widget.email, password: widget.password),
+                    ),
+                  );
+                });
+
+                if (widget.bookStatus == 'finished') {
+                  return AlertDialog(
+                    backgroundColor: const Color(Constant.objectsColor),
+                    title: const Text('Você finalizou o livro.'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: const <Widget>[
+                          Text('Parabéns!'),
+                        ],
+                      ),
+                    ),
+                  );
+                } else if (widget.bookStatus == 'canceled') {
+                  return const AlertDialog(
+                    backgroundColor: Color(Constant.objectsColor),
+                    title: Text('Você cancelou a leitura, que pena!'),
+                  );
+                } else if (widget.bookStatus == 'paused') {
+                  return AlertDialog(
+                    backgroundColor: const Color(Constant.objectsColor),
+                    title: const Text('Você pausou a leitura.'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: const <Widget>[
+                          Text('Espero que retorne em breve!'),
+                        ],
+                      ),
+                    ),
+                  );
+                }
+              } else {
+                if (info[0].errorCode ==
+                    ErrorsConstants.noBookWasFoundWithTheGivenIsbnCode) {
+                  return const NoBookFoundByIsbnMessage();
+                } else if (info[0].errorCode ==
+                    ErrorsConstants.bookHasAlreadyBeenAddedToBookShelf) {
+                  return const BookAlreadyAddedToShelfMessage();
+                }
+              }
+            } else if (snapshot.hasError) {
+              if ('${snapshot.error}' ==
+                  'Invalid argument: "Unauthorized access"') {
+                Future.delayed(const Duration(seconds: 0), () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const LoginPage(title: 'Agnes')));
+
+                  // Unknown Error Message
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const UnauthorizedAccessMessage(),
+                    ),
+                  );
+                });
+              } else {
+                Future.delayed(const Duration(seconds: 0), () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const LoginPage(title: 'Agnes')));
+
+                  // Unknown Error Message
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const UnknownErrorMessage(),
+                    ),
+                  );
+                });
+              }
+            }
+
+            return Center(
+              child: SpinKitChasingDots(
+                color: const Color(Constant.objectsColor),
+                size: width * 0.3,
+                duration: const Duration(milliseconds: 1500),
+              ),
+            );
+          }),
     );
   }
 }

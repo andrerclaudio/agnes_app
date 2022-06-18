@@ -486,9 +486,9 @@ class AddNewBookToShelf extends StatefulWidget {
 }
 
 class _AddNewBookToShelfState extends State<AddNewBookToShelf> {
-  late Future<BookAdded> futureData;
   late final Future<List<BookAdded>> _addNewBookToShelf =
       addNewBookToShelf(widget.email, widget.password, widget.isbn);
+  late Future<BookAdded> futureData;
 
   @override
   Widget build(BuildContext context) {

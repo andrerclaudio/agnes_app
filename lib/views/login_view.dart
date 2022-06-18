@@ -105,6 +105,7 @@ class _LoginPageState extends State<LoginPage> {
                     style: Constant.signInTextStyle,
                   ),
                   onPressed: () {
+                    // TODO Validate the basic information
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (BuildContext context) => HomePage(

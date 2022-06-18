@@ -204,3 +204,38 @@ Future<List<BookAdded>> addNewBookToShelf(
     throw Exception('Failed to add the book to shelf');
   }
 }
+
+// Change book Status ----------------------------------------------------------
+List<BookStatus> newBookToShelf(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<BookStatus>((json) => BookStatus.fromJson(json)).toList();
+}
+
+Future<List<BookStatus>> changeBookStatus(String email, String password,
+    String bookStatus, String targetBookId) async {
+  var basicAuth = base64Encode('$email:$password'.codeUnits);
+
+  final response = await http.Client().post(
+    Uri.parse(
+        // 'http://192.168.0.163:8000/user/shelf/change_book_status?bookStatus=bookStatus'),
+        'https://api.agnes.ooo/user/shelf/change_book_status?bookStatus=$bookStatus&targetBookId=$targetBookId'),
+    headers: {
+      "Content-Type": "application/json",
+      "authorization": 'Basic $basicAuth'
+    },
+  );
+
+  if (response.statusCode == 201) {
+    // If the server did return a 200 OK or 201 Post response,
+    // then parse the JSON.
+    return compute(newBookToShelf, response.body);
+  } else {
+    // If the server did not return a 200 OK or 201 Post response,
+    // then throw an exception.
+    if (response.statusCode == 401) {
+      throw ArgumentError.value('Unauthorized access');
+    }
+    throw Exception('Failed to change the book status');
+  }
+}

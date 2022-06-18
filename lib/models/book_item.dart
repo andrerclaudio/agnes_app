@@ -123,3 +123,21 @@ class CreateUserForm {
     );
   }
 }
+
+// Change book Status ----------------------------------------------------------
+class BookStatus {
+  final bool successOnRequest;
+  final int errorCode;
+
+  const BookStatus({
+    required this.successOnRequest,
+    required this.errorCode,
+  });
+
+  factory BookStatus.fromJson(Map<String, dynamic> json) {
+    return BookStatus(
+      successOnRequest: json['successOnRequest'] as bool,
+      errorCode: json['errorCode'] as int,
+    );
+  }
+}
