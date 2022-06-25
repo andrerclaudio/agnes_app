@@ -239,3 +239,38 @@ Future<List<BookStatus>> changeBookStatus(String email, String password,
     throw Exception('Failed to change the book status');
   }
 }
+
+// Fetch Books on the User Shelf -----------------------------------------------
+List<UserShelfBooks> parseShelfList(String responseBody) {
+  final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed
+      .map<UserShelfBooks>((json) => UserShelfBooks.fromJson(json))
+      .toList();
+}
+
+Future<List<UserShelfBooks>> fetchShelfList(
+    String email, String password) async {
+  var basicAuth = base64Encode('$email:$password'.codeUnits);
+
+  final response = await http.Client().get(
+    Uri.parse(Constant.apiShelfScreenURL),
+    headers: {
+      "Content-Type": "application/json",
+      "authorization": 'Basic $basicAuth'
+    },
+  );
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return compute(parseShelfList, response.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    if (response.statusCode == 401) {
+      throw ArgumentError.value('Unauthorized access');
+    }
+    throw Exception('Failed to fetch the information');
+  }
+}

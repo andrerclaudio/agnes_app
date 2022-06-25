@@ -21,6 +21,9 @@ class Constant {
   static const apiReadingScreenURL =
       'https://api.agnes.ooo/user/shelf/current_readings';
 
+  static const apiShelfScreenURL =
+      'https://api.agnes.ooo/user/shelf/user_shelf';
+
   // static const apiBaseURL = 'http://192.168.0.163:8000/';
   // static const apiReadingScreenURL =
   //     'http://192.168.0.163:8000/user/shelf/current_readings';

@@ -319,9 +319,75 @@ class UserShelfScreen extends StatefulWidget {
 }
 
 class _UserShelfScreenState extends State<UserShelfScreen> {
+  late Future<UserShelfBooks> futureData;
+  late Future<List<UserShelfBooks>> _fetchShelfList =
+      fetchShelfList(widget.email, widget.password);
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _fetchShelfList = fetchShelfList(widget.email, widget.password);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const SizedBox();
+    double width = MediaQuery.of(context).size.width;
+
+    return FutureBuilder<List<UserShelfBooks>>(
+      future: _fetchShelfList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return BooksList(
+            data: snapshot.data!,
+            email: widget.email,
+            password: widget.password,
+          );
+        } else if (snapshot.hasError) {
+          if ('${snapshot.error}' ==
+              'Invalid argument: "Unauthorized access"') {
+            Future.delayed(const Duration(seconds: 0), () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const LoginPage(title: 'Agnes')));
+
+              // Unknown Error Message
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UnauthorizedAccessMessage(),
+                ),
+              );
+            });
+          } else {
+            Future.delayed(const Duration(seconds: 0), () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const LoginPage(title: 'Agnes')));
+
+              // Unknown Error Message
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const UnknownErrorMessage(),
+                ),
+              );
+            });
+          }
+        }
+
+        return Center(
+          child: SpinKitChasingDots(
+            color: const Color(Constant.objectsColor),
+            size: width * 0.3,
+            duration: const Duration(milliseconds: 1500),
+          ),
+        );
+      },
+    );
   }
 }
 
